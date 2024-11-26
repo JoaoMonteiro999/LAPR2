@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to review list of offers
+    activate System
+
+    System --> Employee : shows list of offers by most recent dates \nand asks to choose one or cancel
+        deactivate System
+
+loop
+
+        Employee -> System : selects request number
+        activate System
+        System --> Employee: shows three options: accept request,\ndelete request or cancel.
+        deactivate
+        alt option = accept request
+            Employee -> System :chooses accept request
+            activate System
+            System --> Employee : shows and asks type of commission
+            deactivate
+            Employee -> System : selects type of commission
+            activate System
+            System --> Employee : asks commission value
+            deactivate
+            Employee -> System : inserts commission value
+            activate System
+            System --> Employee : confirms that the add has been created
+        else option = delete request
+            Employee -> System : chooses delete request
+
+
+        end
+
+        System --> Employee :  confirms that the add has been\n deleted and shows refreshed list of \noffers by most recent dates and\n asks to choose one or cancel
+        deactivate
+end
+    Employee -> System : selects to cancel
+    activate System
+
+
+        System --> Employee : goes to the admin menu
+        deactivate System
+
+
+
+@enduml

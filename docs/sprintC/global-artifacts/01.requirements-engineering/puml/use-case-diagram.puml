@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+skinparam packageStyle rect
+
+
+actor UnregisteredUser
+actor Agent
+actor Administrator
+actor Owner
+actor Client
+actor StoreNetworkManager
+
+rectangle System{
+
+    UnregisteredUser --- (UC1 - Display listed properties)
+
+    UnregisteredUser --- (UC7 - Register as a client)
+
+    Agent --- (UC2 - Publish sale announcement)
+
+    Agent --- (UC8 - See list of property announcement requests)
+
+    Agent --- (UC11 - List real estate purchase orders)
+
+    Administrator --- (UC3 - Register employee)
+
+    Administrator --- (UC12 - Import information from legacy system)
+
+    Owner --- (UC4 - Requests listing a property)
+
+    Administrator --- (UC5 - Register store)
+
+    Administrator --- (UC6 - Specify address)
+
+    Client --- (UC9 - Leave message to agent)
+
+    Client --- (UC10 - Place order to purchase property)
+
+    Client --- (UC14 - Read response for appointment requests)
+
+    StoreNetworkManager --- (UC13 - List all employees in every store)
+}
+
+@enduml

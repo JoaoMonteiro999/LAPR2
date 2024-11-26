@@ -1,0 +1,197 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregistered user" as ADM
+participant ":ListPropertiesUI" as UI
+participant ":ListPropertiesController" as CTRL
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as repositoriesSingleton
+participant "propertiesRepository:\nPropertiesRepository" as plistRepository
+
+
+activate ADM
+
+        ADM -> UI : Asks to display listed properties
+
+        activate UI
+
+'            UI --> ADM : requests data (reference, description,  informal \n description, technical description, duration, cost)
+            'create CTRL
+            UI -> CTRL** : create
+            UI -> CTRL : getPropertiesList()
+
+            activate CTRL
+                CTRL -> repositories : getInstance()
+                activate repositories
+
+                repositories --> CTRL: repositories
+                deactivate repositories
+
+               CTRL ->  repositoriesSingleton : getPropretiesRepository()
+               activate repositoriesSingleton
+
+               repositoriesSingleton --> CTRL : propertiesRepository
+               deactivate repositoriesSingleton
+
+
+               CTRL -> plistRepository : getPropretiesList()
+               activate plistRepository
+
+               plistRepository --> CTRL : propertiesList
+               deactivate plistRepository
+
+            CTRL --> UI :propertiesList
+            deactivate CTRL
+
+            UI --> ADM : Show listed properties and request filter criteria
+        deactivate UI
+
+
+    ADM -> UI : User want to apply filters
+    activate UI
+
+    UI -> CTRL : getFilterCriteriaList()
+                activate CTRL
+
+
+
+
+                    CTRL --> UI : filterCriteriaList
+                deactivate CTRL
+
+        UI --> ADM : show filters (type of business,type of properties,\n number of rooms, price, location)
+    deactivate UI
+
+        ADM -> UI : Select the filter
+        activate UI
+
+        UI --> ADM : Request filter value
+
+
+        ADM -> UI : Type value
+
+        alt filter = type of business
+
+
+
+
+        UI -> CTRL : getPropertiesByTypeOfBusiness(value)
+
+                    activate CTRL
+                        CTRL -> repositories : getInstance()
+                        activate repositories
+
+                        repositories --> CTRL: propertiesRepository
+                        deactivate repositories
+
+                       CTRL -> plistRepository : getPropertiesByTypeOfBusiness(value)
+                       activate plistRepository
+
+                       plistRepository --> CTRL : propertiesList
+                       deactivate plistRepository
+
+                    CTRL --> UI :propertiesList
+                    deactivate CTRL
+        else filter = type of properties
+
+
+
+        UI -> CTRL : getPropertiesByTypeOfProperty(value)
+
+                    activate CTRL
+                        CTRL -> repositories : getInstance()
+                        activate repositories
+
+                        repositories --> CTRL: propertiesRepository
+                        deactivate repositories
+
+                       CTRL -> plistRepository : getPropertiesByTypeOfProperty(value)
+                       activate plistRepository
+
+                       plistRepository --> CTRL : propertiesList
+                       deactivate plistRepository
+
+                    CTRL --> UI :propertiesList
+                    deactivate CTRL
+        else filter = number of rooms
+
+
+
+        UI -> CTRL : getPropertiesByNumberOfRooms(value)
+
+                    activate CTRL
+                        CTRL -> repositories : getInstance()
+                        activate repositories
+
+                        repositories --> CTRL: propertiesRepository
+                        deactivate repositories
+
+                       CTRL -> plistRepository : getPropertiesByNumberOfRooms(value)
+                       activate plistRepository
+
+                       plistRepository --> CTRL : propertiesList
+                       deactivate plistRepository
+
+                    CTRL --> UI :propertiesList
+                    deactivate CTRL
+
+        else filter = price
+
+        UI -> CTRL : getPropertiesByPrice(value)
+
+                            activate CTRL
+                                CTRL -> repositories : getInstance()
+                                activate repositories
+
+                                repositories --> CTRL: propertiesRepository
+                                deactivate repositories
+
+                               CTRL -> plistRepository : getPropertiesByPrice(value)
+                               activate plistRepository
+
+                               plistRepository --> CTRL : propertiesList
+                               deactivate plistRepository
+
+                            CTRL --> UI :propertiesList
+                            deactivate CTRL
+                else filter = Location
+
+
+         UI -> CTRL : getPropertiesByLocation(value)
+
+                                     activate CTRL
+                                         CTRL -> repositories : getInstance()
+                                         activate repositories
+
+                                         repositories --> CTRL: propertiesRepository
+                                         deactivate repositories
+
+                                        CTRL -> plistRepository : getPropertiesByLocation(value)
+                                        activate plistRepository
+
+                                        plistRepository --> CTRL : propertiesList
+                                        deactivate plistRepository
+
+                                     CTRL --> UI :propertiesList
+                                     deactivate CTRL
+
+        end alt
+
+
+
+
+
+
+        UI --> ADM : Show Properties with selectd filters
+    deactivate UI
+
+
+
+deactivate ADM
+
+@enduml

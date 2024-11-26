@@ -1,0 +1,91 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ListPropertiesUI
+
+
+class Property{
+-int area
+-int cityCenter
+-int price
++Property()
+}
+
+class Adress{
+-String street
+-String cityName
+-String districtName
+-String stateAcronym
+-Integer zipCode
++Address(district,state,\ncity,street,zip-code)
+}
+
+class ContractType{
+    -contractValue
+    -contractType
+}
+
+
+
+
+
+
+
+class PropertyRepository {
+    + getPropertiesList()
+    +getPropertiesByPropertyType(propertyType)
+    +getPropertiesByPrice(propertyPrice)
+    +getPropertiesByNumberOfRooms(numberOfRooms)
+    +getPropertiesByTypeOfBusiness(typeBusiness)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getPropertyRepository()
+
+}
+
+class ListPropertiesController {
+    + ListPropertiesController(announcementRepository, PropertyTypeRepository)
+    + getPropertyType()
+    + getContractType()
+    - getPropertyTypeByFilter(PropertyTypeFilter)
+    + getPropertiesList()
+    +getPropertiesByPropertyType(propertyType)
+    +getPropertiesByPrice(propertyPrice)
+    +getPropertiesByNumberOfRooms(numberOfRooms)
+    +getPropertiesByTypeOfBusiness(typeBusiness)
+
+
+}
+
+ListPropertiesUI ..>ListPropertiesController
+
+Repositories -> Repositories : instance
+
+ListPropertiesController .> Repositories : repositories
+
+Repositories --> PropertyRepository
+
+ListPropertiesController ..> PropertyRepository : PropertyRepository
+
+PropertyRepository --> Property
+
+Property -> ContractType
+
+Property --> Adress : Adress
+
+ListPropertiesController ..> ContractType : ContractType
+
+
+
+@enduml

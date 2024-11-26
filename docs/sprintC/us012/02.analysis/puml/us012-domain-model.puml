@@ -1,0 +1,105 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US1
+
+
+class Administrator
+
+class LegacySystem
+
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class Commission{
+    typeOfCommission
+    commissionValue
+}
+
+class Agency{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class PropertyType{
+    propertyType
+}
+
+class Lease{
+    leaseValue
+    contractDuration
+}
+
+class Sale{
+    saleValue
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class Person{
+        name
+        passportCardNum
+        taxNumber
+        emailAddress
+        phoneNumber
+}
+
+class Owner
+
+class Equipment
+
+LegacySystem "1" -- "1" Property : contains >
+LegacySystem "1" -- "1" Owner : contains >
+LegacySystem "1" -- "1" Agency : contains >
+LegacySystem "1" -- "1" Commission : contains >
+
+Administrator "1" -- "1" LegacySystem : imports >
+
+Property "1" -- "1" Address : located at >
+Property <|-- Dwelling
+
+PropertyType "1" -- "1..*" Property : categorized by <
+
+Lease "0..*" -- "1" Property : classified as <
+Lease "1" -- "1..*" Property : classifies >
+
+Sale "0..*" -- "1" Property : classified as <
+Sale "1" -- "1..*" Property : classifies >
+
+Owner --|> Person
+
+Dwelling "1" -- "1..*" Equipment : has >
+Dwelling <|-- House
+
+
+@enduml

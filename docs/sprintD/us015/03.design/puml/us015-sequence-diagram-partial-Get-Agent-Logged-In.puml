@@ -1,0 +1,39 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":ListBookingRequestsController" as CTRL
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as PLAT
+participant "authenticationRepository\n:AuthenticationRepository" as authenticationRepository
+
+-> CTRL : getAgentLoggedIn()
+            activate CTRL
+
+            CTRL -> repositories : getInstance()
+            activate repositories
+
+            repositories --> CTRL : repositories
+            deactivate repositories
+
+            CTRL -> PLAT : getAuthenticationRepository()
+            activate PLAT
+
+            PLAT --> CTRL : authenticationRepository
+            deactivate PLAT
+
+            CTRL -> authenticationRepository : getAgentLoggedIn()
+            activate authenticationRepository
+
+            authenticationRepository --> CTRL : agentLoggedIn
+            deactivate authenticationRepository
+
+            <-- CTRL  : agentLoggedIn
+            deactivate CTRL
+
+
+
+
+
+@enduml

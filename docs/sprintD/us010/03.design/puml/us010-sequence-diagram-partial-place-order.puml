@@ -1,0 +1,51 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant "orderRepository:\nOrderRepository" as OrderRepository
+participant ":Order" as Order
+
+
+autonumber 20
+-> OrderRepository : placeOrder(property, orderAmount, clientEmail)
+
+autonumber 20.1
+
+    activate OrderRepository
+
+        group Place Order
+
+            OrderRepository -> Order** : placeOrder (property, orderAmount, clientEmail)
+
+            |||
+            OrderRepository -> OrderRepository : addOrder(order)
+            activate OrderRepository
+
+                OrderRepository -> OrderRepository : checkClientMadeOrderSameProperty(clientEmail, property)
+                activate OrderRepository
+
+                    OrderRepository --> OrderRepository
+                deactivate OrderRepository
+
+                OrderRepository -> OrderRepository : validateOrder(order)
+                activate OrderRepository
+
+                    OrderRepository --> OrderRepository
+                deactivate OrderRepository
+
+                OrderRepository --> OrderRepository
+                deactivate OrderRepository
+
+        end group
+
+        <-- OrderRepository : order
+    deactivate OrderRepository
+
+autonumber 21
+
+
+
+
+
+@enduml

@@ -1,0 +1,77 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US4
+
+class Owner{
+    cardNumber
+    taxNumber
+    email
+    phoneNumber
+}
+
+class Offer{
+    publicationDate
+    price
+    propertyDescription
+}
+
+class Property {
+    area
+    cityCenterDistance
+    price
+    photograph
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class Property_type
+
+class Apartment_house {
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class Apartment
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class Equipment
+
+class Land
+
+class Agent
+
+Owner "1" - "0…*" Offer: sends >
+
+Offer "1" - "1" Property: contains >
+Offer "1" - "1" Agent: sent to >
+
+Property "1" - "1" Address: has >
+Property "1" - "1" Property_type: categorized by
+
+Property_type <|-- Land
+Property_type <|-- Apartment_house
+
+Apartment_house <|-- Apartment
+Apartment_house <|-- House
+Apartment_house "1" - "1...*" Equipment: has >
+
+@enduml

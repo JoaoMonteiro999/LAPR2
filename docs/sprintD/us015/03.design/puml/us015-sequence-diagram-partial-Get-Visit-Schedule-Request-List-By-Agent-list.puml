@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant "VisitScheduleRequestRepository" as visitsRepository
+
+participant "BubbleSort" as BubbleSort
+participant "TreeSort" as TreeSort
+
+
+
+-> visitsRepository: getVisitScheduleRequestListByAgent(Agent agentLoggedIn,\nDate startDate,Date endDate)
+        activate visitsRepository
+            visitsRepository -> visitsRepository : getListByDate(Date startDate,Date endDate)
+            activate visitsRepository
+            deactivate
+            visitsRepository -> visitsRepository : filterListByAgent(Agent agentLoggedIn)
+            activate visitsRepository
+                        deactivate
+            visitsRepository -> visitsRepository : sortByConfigurationFile()
+            activate visitsRepository
+            visitsRepository -> visitsRepository : getSortingMethod()
+            activate visitsRepository
+            visitsRepository --> visitsRepository : sortingMethod
+            deactivate
+            alt sortMethod = bubble
+                        visitsRepository -> BubbleSort : sort(visitScheduleRequestList)
+                        activate BubbleSort
+                        BubbleSort --> visitsRepository : visitScheduleRequestListSorted
+                        deactivate
+                        else sortMethod = tree
+                        visitsRepository -> TreeSort : sort(visitScheduleRequestList)
+                                    activate TreeSort
+                                    TreeSort --> visitsRepository : visitScheduleRequestListSorted
+                                    deactivate
+                                    end
+                        visitsRepository --> visitsRepository: visitScheduleRequestList
+                        deactivate
+
+            <-- visitsRepository: visitScheduleRequestList
+            deactivate visitsRepository
+
+
+@enduml

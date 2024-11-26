@@ -1,0 +1,149 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Organization Agent" as ADM
+participant ":PublishSaleAnnouncementUI" as UI
+participant ":PublishSaleAnnouncementController" as CTRL
+participant "Repository:\nSaleAnnouncementRepository" as SaleRep
+participant ":SaleAnnouncement" as Sale
+
+
+
+activate ADM
+
+        ADM -> UI : asks to publish a sale announcement
+
+        activate UI
+        UI -> CTRL** : PublishSaleAnnouncementController()
+
+
+
+            UI --> ADM : Asks to write the district (optional), state\ncity, street and zip-code
+        deactivate UI
+
+    ADM -> UI : inserts data
+        activate UI
+
+
+
+            UI --> ADM : shows property types and\n asks to select one
+        deactivate UI
+
+    ADM -> UI : selects a property type
+    activate UI
+
+
+        UI --> ADM : shows type of transaction (rent or buy)\n and asks to select one
+    deactivate UI
+
+    ADM -> UI : selects type of transaction
+    activate UI
+
+
+            alt type = apartment
+
+                UI --> ADM : requests the apartment characteristics (area,\ncityCenterDistance, price, numBedrooms,\nnumBathrooms, numParkingSpaces, basement,\ninhabitableLoft, sunExposure,todayDate)
+
+            else type = house
+                UI --> ADM : requests the house characteristics (area,\ncityCenterDistance, price, numBedrooms,\nnumBathrooms, numParkingSpaces,todayDate)
+
+            else type = land
+
+                UI --> ADM : requests the land characteristics (area,\ncityCenterDistance,price,todayDate)
+
+
+            end alt
+                deactivate UI
+
+
+    ADM -> UI : confirms and submits data
+    activate UI
+
+    UI --> ADM : aks to insert photos
+
+    deactivate UI
+
+    ADM -> UI : inserts photos(at least one)
+
+    activate UI
+
+    UI --> ADM : asks who is the owner
+
+    deactivate UI
+
+    ADM -> UI : inserts the owner email
+
+    activate UI
+    UI --> ADM : asks the price
+    deactivate
+
+    ADM -> UI : inserts the price
+    activate UI
+
+
+
+
+
+        alt type = apartment
+        UI -> CTRL : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, todayDate,owner,\n photographs)
+        activate CTRL
+        else type = house
+        UI -> CTRL : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, basement,\ninhabitableLoft, sunExposure, todayDate,owner,\n photographs)
+        else type = land
+        UI -> CTRL : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, todayDate,owner,\n photographs)
+        end alt
+
+
+        alt type = apartment
+                CTRL -> SaleRep : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, todayDate,owner,\n photographs)
+                activate SaleRep
+                else type = house
+                CTRL -> SaleRep : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, basement,\ninhabitableLoft, sunExposure, todayDate,owner,\n photographs)
+                else type = land
+                CTRL -> SaleRep : createSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, todayDate,owner,\n photographs)
+                end alt
+
+
+
+            ref over SaleRep
+            createSaleAnnouncement
+            end ref
+            SaleRep->Sale
+            activate Sale
+
+            ref over Sale
+            fillSaleAnnouncement
+            end ref
+            Sale -> Property
+            activate Property
+
+
+            ref over Property
+            FillProperty
+            end ref
+
+
+
+        Property --> Sale : show operation success
+        deactivate
+
+        Sale --> SaleRep : show operation success
+        deactivate
+
+        SaleRep --> CTRL : show operation success
+        deactivate
+
+
+        CTRL --> UI: show operation success
+        deactivate CTRL
+        UI --> ADM: show operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

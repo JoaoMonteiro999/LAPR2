@@ -1,0 +1,118 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Client" as ADM
+participant ":VisitiScheduleUI" as UI
+participant ":VisitiScheduleController" as CTRL
+participant ":visitScheduleRequest" as visit
+participant "VisitScheduleRequestRepository:\n VisitScheduleRequestRepository" as schdlRep
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as repositoriesSingleton
+participant "propertiesRepository:\nPropertiesRepository" as plistRepository
+
+
+activate ADM
+
+ADM -> UI : Asks to see list of properties
+
+activate UI
+
+'            UI --> ADM : requests data (reference, description,  informal \n description, technical description, duration, cost)
+'create CTRL
+UI -> CTRL** : create
+UI -> CTRL : getPropertiesList()
+
+activate CTRL
+    CTRL -> repositories : getInstance()
+    activate repositories
+
+    repositories --> CTRL: repositories
+    deactivate repositories
+
+   CTRL ->  repositoriesSingleton : getPropretiesRepository()
+   activate repositoriesSingleton
+
+   repositoriesSingleton --> CTRL : propertiesRepository
+   deactivate repositoriesSingleton
+
+
+   CTRL -> plistRepository : getPropretiesList()
+   activate plistRepository
+
+   plistRepository --> CTRL : propertiesList
+   deactivate plistRepository
+
+CTRL --> UI :propertiesList
+deactivate CTRL
+
+UI --> ADM : Show listed properties  sorted from \n the most recent entries to the oldest
+deactivate UI
+
+
+ADM -> UI : Select one of the properties
+activate UI
+
+UI --> ADM : Requests data (client's name, phone number,\npreferred date and time slot)
+
+deactivate UI
+
+ADM -> UI : Type requested data
+activate UI
+
+UI -> CTRL : submitScheduleRequest
+activate CTRL
+
+CTRL -> repositories : getVisitScheduleRequestRepository
+activate repositories
+
+repositories -> CTRL : VisitScheduleRequestRepository
+deactivate repositories
+
+CTRL -> schdlRep : getScheduleRequestList (Client)
+activate schdlRep
+
+schdlRep -> CTRL :
+deactivate schdlRep
+
+CTRL -> CTRL : verifyOverlap
+    alt in case of the request overlap
+CTRL -> UI : invalidRequest
+
+UI -> ADM : Show a message to inform the \n client that the request is invalid
+
+end
+
+
+
+
+alt in case of the request no overlap
+
+CTRL -> visit : createVisitRequest
+activate visit
+
+visit -> CTRL : visitRequest
+deactivate visit
+
+
+CTRL -> schdlRep : addScheduleRequest (visitRequest)
+activate schdlRep
+
+schdlRep -> CTRL :
+deactivate schdlRep
+
+CTRL -> UI : validRequest
+
+UI -> ADM : Show a message to inform the \n client that the request is valid
+
+end
+
+
+
+deactivate ADM
+
+@enduml

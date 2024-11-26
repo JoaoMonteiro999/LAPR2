@@ -1,0 +1,48 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+left to right direction
+
+class OrdersUI
+
+class OrdersController{
+    + getAgentProperties()
+    + getPropertyOrders()
+    + acceptOrder()
+    + rejectOrder()
+    + sortPropertiesByOldest()
+    + sortOrdersByAmount()
+}
+
+class PropertyRepository {
+    + getAgentProperties()
+}
+
+class OrdersRepositorie {
+    + getPropertyOrders()
+    + rejectOthers()
+    + sendAcceptEmailToClient()
+    + getAgentProperties()
+    + rejectOrder()
+    + sendRejectEmailToClient()
+}
+
+class AdvertisementRepository {
+    + deletePropertyAdvertisement()
+}
+
+OrdersUI ..>OrdersController
+
+OrdersController ..> PropertyRepository : property
+OrdersController ..> OrdersRepositorie : order
+OrdersController ..> AdvertisementRepository : advertisement
+
+
+
+@enduml

@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "agent" as agent
+participant ":System" as System
+
+activate agent
+
+    agent -> System : selects the booking request
+    activate System
+
+        System --> agent : displays booking request information and asks for the response
+    deactivate System
+
+    opt respond
+
+    agent -> System : submits the response
+    activate System
+
+        System --> agent : shows data (response, propertyLocation) and asks for verification
+
+    opt verifies
+
+    agent -> System : verifies
+
+    System --> agent : shows operation success
+
+    else cancels
+
+    agent -> System : cancels
+
+    System --> agent : goes back to booking requests list
+
+    deactivate system
+
+    end opt
+
+    else go back
+
+    agent -> System : go back
+
+    System --> agent : goes back to booking requests list
+
+    end opt
+
+@enduml

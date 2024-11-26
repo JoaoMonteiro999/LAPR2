@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Unregistered user" as user
+participant ":System" as System
+
+activate user
+
+    user -> System : asks to be registered in the system
+    activate System
+
+        System --> user : requests the required data to register
+    deactivate System
+
+    user --> System : types requested data (name, passport card number, tax number, email address, phone number, address)
+    activate System
+
+    System --> user : shows the requested data
+    deactivate System
+
+    user --> System : submits data
+    activate System
+
+    System --> user : shows operation success
+
+@enduml

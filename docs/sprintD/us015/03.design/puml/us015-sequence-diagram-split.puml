@@ -1,0 +1,102 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as Agent
+participant ":ListBookingRequestsUI" as UI
+participant ":ListBookingRequestsController" as CTRL
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as PLAT
+participant "VisitScheduleRequestRepository" as visitsRepository
+participant  ":BookingRequestMapper" as Mapper
+
+
+activate Agent
+
+    Agent -> UI : asks to see booking requests list
+    activate UI
+
+
+
+
+
+
+
+
+        UI --> Agent : requests the beginning date
+    deactivate UI
+
+    Agent -> UI : insert the beginning date
+    activate UI
+
+
+
+
+        UI --> Agent : requests ending date
+    deactivate UI
+
+
+    Agent -> UI : selects ending date
+    activate UI
+
+
+
+UI --> CTRL** : create
+
+            UI -> CTRL : getAgentLoggedIn()
+            activate CTRL
+
+            ref over CTRL
+            Get agent logged in
+            end
+
+            CTRL --> UI : agentLoggedIn
+            deactivate CTRL
+
+        UI->CTRL : getBookingListSorted(Agent agentLoggedIn,\n Date startDate, Date endDate)
+        activate CTRL
+                CTRL->repositories: getInstance()
+            activate repositories
+                repositories-->CTRL: repositories
+            deactivate repositories
+                CTRL->PLAT: VisitScheduleRequestRepository()
+            activate PLAT
+                PLAT-->CTRL: visitScheduleRequestRepository
+            deactivate PLAT
+                CTRL -> visitsRepository: getVisitScheduleRequestListByAgent(Agent agentLoggedIn,Date startDate,Date endDate)
+        activate visitsRepository
+            ref over visitsRepository
+            Get visit schedule request list by agent
+            end
+
+            visitsRepository-->CTRL: visitScheduleRequestList
+            deactivate visitsRepository
+
+        CTRL->Mapper: toDTO(visitScheduleRequestList)
+        activate Mapper
+        ref over Mapper
+        To DTO
+        end
+            Mapper --> CTRL : visitScheduleRequestListDTO
+            deactivate Mapper
+
+
+            deactivate PLAT
+
+                CTRL --> UI : visitScheduleRequestListDTO
+            deactivate CTRL
+
+
+
+
+
+        UI --> Agent : shows booking list
+    deactivate UI
+
+
+
+@enduml

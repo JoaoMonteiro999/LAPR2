@@ -1,0 +1,68 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+title US017 Class Diagram
+
+'left to right direction
+
+class ListDealsUI
+
+class ListDealsController{
+    +ListDealsController()
+    +ascendingBubbleSort()
+    +descendingBubbleSort()
+    +ascendingTreeSort()
+    +descendingTreeSort()
+}
+
+class SortAlgorithm{
+    +ascendingBubbleSort()
+    +descendingBubbleSort()
+    +ascendingTreeSort()
+    +descendingTreeSort()
+
+
+}
+
+class Order{
+    - Integer orderAmount
+    - String clientEmail
+
+}
+
+class OrderRepository{
+    + placeOrder(property, orderAmount, clientEmail)
+    + getOrders()
+    + checkOrderAmountIsValid(property, orderAmount)
+    - addOrder(order)
+    - validateOrder(order)
+    - checkClientMadeOrderSameProperty(clientEmail, property)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getOrderRepository()
+}
+
+
+ListDealsUI --> ListDealsController
+
+ListDealsController ..> Repositories : repositories
+ListDealsController ..> OrderRepository : orderRepository
+ListDealsController ..> SortAlgorithm
+
+Repositories --> Repositories : instance
+Repositories --> "1" OrderRepository : orderRepository
+
+OrderRepository --> "*" Order
+
+
+
+@enduml

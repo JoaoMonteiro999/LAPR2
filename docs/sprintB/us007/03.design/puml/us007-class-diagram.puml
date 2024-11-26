@@ -1,0 +1,56 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class Person {
+    - String name
+    - String passportCardNum
+    - String taxNumber
+    - String emailAddress
+    - String phoneNumber
+}
+
+
+class Client {
+    - String password
+    + Client(name, passportCardNum, taxNumber,\n emailAddress, phoneNumber, password)
+    + getPassword()
+    + sendEmail()
+}
+
+
+class ClientRepository {
+    + addClient(client)
+    + registerClient(name, passportCardNum,\n taxNumber, emailAddress, phoneNumber, password)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getUserRepository()
+}
+
+class RegisterClientController {
+    + UserRegistrationController()
+    + registerClient(name, passportCardNum,\n taxNumber, emailAddress, phoneNumber, password)
+}
+
+class RegisterClientUI
+
+RegisterClientUI .> RegisterClientController
+
+RegisterClientController .> Repositories : repositories
+Repositories -> Repositories : instance
+RegisterClientController .> Client
+Repositories -> ClientRepository
+
+ClientRepository <. RegisterClientController : userRepository
+Person <|-- Client
+@enduml

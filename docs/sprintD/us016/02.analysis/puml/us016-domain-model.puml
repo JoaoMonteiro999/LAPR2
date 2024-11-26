@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US16
+
+class Agent {
+    name
+}
+
+class BookingRequest{
+    name
+    phoneNumber
+    date
+    startTime
+    endTime
+
+}
+
+class Visit{
+    visitDate
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+BookingRequest "1" -- "*" Agent : views <
+BookingRequest "*" --> "1" Property : refers to
+BookingRequest "1" --> "1" Visit : turns to
+
+@enduml

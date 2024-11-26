@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+participant ":ListRequestController" as CTRL
+participant "Repository:\nRequestsRepository" as ReqRep
+
+
+
+
+
+-> CTRL : ListRequests()
+activate CTRL
+
+CTRL -> ReqRep : getRequestList()
+        activate ReqRep
+        ReqRep -> ReqRep : getRequestList()
+        ReqRep --> CTRL : getRequestList()
+        deactivate
+        CTRL -> CTRL :Collections.sort(list)
+
+        loop
+        CTRL -> CTRL:request.getProperty()
+        CTRL -> CTRL:request.getDate()
+        end
+<-- CTRL : list
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US10
+
+
+class Client
+
+class Order{
+    clientEmail
+    orderAmount
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+Client "1" -- "1..*" Order : places >
+
+Order "1" -- "1" Property : contains >
+
+@enduml

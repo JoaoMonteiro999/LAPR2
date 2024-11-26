@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":DealAnalysis" as D_A
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "orderRepository:\nOrderRepository" as OrderRepository
+
+
+autonumber 10
+-> D_A : getRegressionParameters()
+
+autonumber 10.1
+
+activate D_A
+    group Get Regression Parameters
+
+          D_A -> RepositorySingleton : getInstance()
+          activate RepositorySingleton
+
+              RepositorySingleton --> D_A: repositories
+          deactivate RepositorySingleton
+
+          D_A -> PLAT : getOrderRepository()
+          activate PLAT
+
+              PLAT --> D_A : orderRepository
+          deactivate PLAT
+
+          D_A -> OrderRepository : getRegressionParameters(chosenRegressionParameter)
+          activate OrderRepository
+
+              OrderRepository --> D_A : regressionParameters
+          deactivate OrderRepository
+
+    end group
+    autonumber 11
+<-- D_A : regressionParameters
+deactivate D_A
+
+
+@enduml

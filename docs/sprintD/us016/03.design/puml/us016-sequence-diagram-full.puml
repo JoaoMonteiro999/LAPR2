@@ -1,0 +1,231 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as Agent
+participant ":BookingRequestUI" as UI
+participant ":BookingRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "bookingRequestRepository:\nBookingRequestRepository" as bookingRequestRepository
+participant "visitRepository:\nVisitRepository" as visitRepository
+participant "propertyRepository:\nPropertyRepository" as propertyRepository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "Visit" as visit
+
+activate Agent
+
+        Agent -> UI : selects the booking request
+        activate UI
+
+            UI -> CTRL** : create
+            activate CTRL
+
+            CTRL -> CTRL : getBookingRequest()
+            activate CTRL
+
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getBookingRequestRepository()
+                    activate PLAT
+
+                        PLAT --> CTRL : BookingRequestRepository
+                    deactivate PLAT
+
+                    CTRL -> bookingRequestRepository : getBookingRequest()
+                    activate bookingRequestRepository
+
+                       bookingRequestRepository --> CTRL : bookingRequestInformation
+                    deactivate bookingRequestRepository
+
+                    CTRL --> UI : bookingRequestInformation
+                deactivate CTRL
+
+            deactivate CTRL
+
+            UI -> Agent : displays visit information and asks for the response
+            deactivate UI
+
+        opt responds
+
+        Agent -> UI : submits the response
+        activate UI
+
+            UI -> CTRL : response
+            activate CTRL
+
+            CTRL -> CTRL : getPropertyLocation()
+                            activate CTRL
+
+                                CTRL -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                deactivate RepositorySingleton
+
+                                CTRL -> PLAT : getPropertyRepository()
+                                activate PLAT
+
+                                    PLAT --> CTRL : propertyRepository
+                                deactivate PLAT
+
+                                CTRL -> propertyRepository : getPropertyLocation()
+                                activate propertyRepository
+
+                                    propertyRepository --> CTRL : propertyLocation
+                                deactivate propertyRepository
+
+                                CTRL --> UI : propertyInfo
+                            deactivate CTRL
+
+                        deactivate CTRL
+
+            UI --> Agent : shows data(response and property information) and asks for verification
+
+        opt verifies
+
+        Agent -> UI : verifies
+        activate UI
+
+         UI -> CTRL : createVisit()
+                    activate CTRL
+
+                        CTRL -> CTRL : getAgentNameFromSession()
+                        activate CTRL
+
+                            CTRL -> _APP: getInstance()
+                            activate _APP
+                                _APP -> CTRL: appSession
+                            deactivate _APP
+
+                            CTRL -> APP: getCurrentSession()
+                            activate APP
+
+                                APP --> CTRL: currentSession
+                            deactivate APP
+
+                            CTRL -> SESSION: agentName = getUserName()
+                            activate SESSION
+
+                                SESSION --> CTRL: agentName
+                            deactivate SESSION
+
+                        CTRL --> CTRL
+                        deactivate CTRL
+
+                        CTRL -> CTRL : getAgentPhoneNumberFromSession()
+                        activate CTRL
+
+                             CTRL -> _APP: getInstance()
+                             activate _APP
+                                _APP -> CTRL: appSession
+                                deactivate _APP
+
+                             CTRL -> APP: getCurrentSession()
+                             activate APP
+
+                                APP --> CTRL: currentSession
+                                deactivate APP
+
+                             CTRL -> SESSION: agentPhoneNumber = getUserPhoneNumber()
+                             activate SESSION
+
+                                 SESSION --> CTRL: agentPhoneNumber
+                                 deactivate SESSION
+
+                        CTRL --> CTRL
+                        deactivate CTRL
+
+
+
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getVisitRepository()
+                        activate PLAT
+
+                        PLAT --> CTRL : VisitRepository
+                        deactivate PLAT
+
+                        CTRL -> visitRepository : createVisit(visitDate)
+                        activate visitRepository
+
+                        visitRepository -> visit** : createVisit(visitDate)
+
+                        visitRepository -> visitRepository : addVisit(visit)
+                        activate visitRepository
+
+                         visitRepository -> visitRepository : validateVisit()
+                         activate  visitRepository
+
+                          visitRepository --> visitRepository
+                          deactivate visitRepository
+
+                          visitRepository --> visitRepository
+                          deactivate visitRepository
+
+                          visitRepository -> CTRL : visit
+                          deactivate visitRepository
+
+                          CTRL -> CTRL : sendEmail(agentName, agentPhoneNumber, propertyLocation, response)
+                          activate CTRL
+
+                          CTRL -> CTRL : validate()
+                          activate CTRL
+
+                           CTRL --> CTRL
+                           deactivate CTRL
+
+                           CTRL --> CTRL
+                           deactivate CTRL
+
+                        CTRL -> bookingRequestRepository : deleteBookingRequest()
+                        activate bookingRequestRepository
+
+                        bookingRequestRepository -> CTRL : deleted
+                        deactivate bookingRequestRepository
+
+                    CTRL -> UI : success
+                    deactivate CTRL
+
+        UI -> Agent : shows operation success
+        deactivate UI
+
+        else cancels
+
+        Agent -> UI : cancels
+        activate UI
+
+        UI -> Agent : goes back to booking requests list
+        deactivate UI
+
+        end opt
+
+        else go back
+
+        Agent -> UI : go back
+        activate UI
+
+        UI -> Agent : goes back to booking requests list
+        deactivate UI
+
+        end opt
+
+
+
+deactivate Agent
+
+@enduml

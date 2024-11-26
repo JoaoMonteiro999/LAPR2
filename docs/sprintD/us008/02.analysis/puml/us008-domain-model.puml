@@ -1,0 +1,154 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US8
+
+
+class Request{
+    publicationDate
+}
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class PropertyType{
+    propertyType
+}
+class BusinessType{
+    businessType
+}
+
+class Lease{
+    leaseValue
+    contractDuration
+}
+
+class Sale{
+    saleValue
+}
+
+class Agency{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+class Commission{
+    commissionValue
+}
+class CommissionType {
+commissionType
+}
+
+class Person{
+        name
+        passportCardNum
+        taxNumber
+        emailAddress
+        phoneNumber
+}
+
+class Owner
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+
+
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+
+
+class Equipment{
+    centralHeating
+    airConditioning
+}
+class Photograph{
+    linkToPhotograph
+}
+
+class Employee{
+
+}
+
+class OrganizationRole{
+    roleName
+}
+
+
+class Agent {
+
+
+}
+
+class Announcement{
+    AdvertisementDate
+}
+
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+
+
+
+Agent "1" --- "1..*" Announcement: publishes  >
+Agent "1" -- "1..*" Request : reviews >
+Announcement "1" -- "1" Request : can be <
+Request "1" -- "1" Property : refers to >
+Agent "1" -- "1..*" Property : responsible for >
+Announcement "1" -- "1" Property : contains >
+Property "1" -- "1" Address : located at >
+Property <|-- Dwelling
+Photograph "1..*" -- "1" "Property" : has <
+Dwelling "1" -- "1..*" Equipment : has >
+Dwelling <|-- House
+Agent --|> Person
+Owner "1" -- "1..*" Property: sells/rents >
+Owner --|> Person
+Owner "1" -- "1..*" Request : makes >
+Property "1" -- "1" BusinessType : classified as >
+
+BusinessType "1" -- "1" Lease : categorized as >
+BusinessType "1" -- "1" Sale : categorized as >
+Commission "1" -- "1" Agent : defines <
+Commission "1" -- "1" CommissionType :categorized by >
+Person <|-- Employee
+OrganizationRole "1..*" -- "1" Employee : plays <
+Agency "1" -- "1..*" Employee : owns >
+Administrator "1" -- "1..*" Employee : registers >
+OrganizationRole <|-- Administrator
+OrganizationRole <|-- Agent
+PropertyType "1" -- "1..*" Property : categorized by <
+
+
+
+
+
+
+
+
+@enduml

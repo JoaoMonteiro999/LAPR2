@@ -1,0 +1,80 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'hide footbox
+participant ":DivideAgenciesAlgorithm" as DivideAgenciesAlgorithm
+participant ":SublistsAndSumDifference" as SublistsAndSumDifference
+
+autonumber 14
+-> DivideAgenciesAlgorithm : divideSetOfAgencies(numPropertiesInAgenciesList)
+autonumber 14.1
+
+activate DivideAgenciesAlgorithm
+
+    group Divide Set Of Agencies
+
+        loop until it reaches the number of partitions
+
+                DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : calculateDifferenceOfTheSum(numPropertiesInAgenciesList, binaryString, n, oneList, zeroList)
+                activate DivideAgenciesAlgorithm
+
+                    DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : createSublists(numPropertiesInAgenciesList, binaryString, zeroList, oneList, n)
+                    activate DivideAgenciesAlgorithm
+
+                    |||
+
+                        DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : sublistsSum(zeroList)
+                        activate DivideAgenciesAlgorithm
+
+                            DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : zeroListSum
+                        deactivate DivideAgenciesAlgorithm
+
+                        |||
+
+                        DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : sublistsSum(oneList)
+                        activate DivideAgenciesAlgorithm
+
+                            DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : oneListSum
+                        deactivate DivideAgenciesAlgorithm
+
+                    |||
+
+                    DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : sumDifference
+                deactivate DivideAgenciesAlgorithm
+
+                |||
+
+                DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : verifyIfDifferenceIsMin(sumDifference)
+                activate DivideAgenciesAlgorithm
+
+                    DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : differenceArray
+
+                deactivate DivideAgenciesAlgorithm
+
+            end
+
+            |||
+
+            DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : calculateDifferenceOfTheSum(numPropertiesInAgenciesList, minDifferenceBinary, n, zeroList, oneList)
+            activate DivideAgenciesAlgorithm
+
+                DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : minDifference
+            deactivate DivideAgenciesAlgorithm
+
+            |||
+
+            DivideAgenciesAlgorithm -> SublistsAndSumDifference** : create(numPropertiesInAgenciesList, oneList, zeroList, minDifference)
+            DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : sublistsAndSumDifference
+        deactivate DivideAgenciesAlgorithm
+
+    end
+    autonumber 15
+
+    <-- DivideAgenciesAlgorithm : sublistsAndSumDifference
+deactivate DivideAgenciesAlgorithm
+
+@enduml

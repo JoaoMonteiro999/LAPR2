@@ -1,0 +1,39 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Client" as client
+participant ":System" as System
+
+activate client
+
+    client -> System : asks to see booking requests list
+    activate System
+
+        System --> client : requests the beginning date
+    deactivate System
+
+    client -> System : selects the beginning date
+    activate System
+
+        System --> client : requests ending date
+    deactivate System
+
+
+    client -> System : selects ending date
+    activate System
+
+
+
+
+
+        System --> client : shows booking list
+
+    deactivate System
+
+@enduml

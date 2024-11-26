@@ -1,0 +1,67 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class DivideAgenciesUI
+
+class DivideAgenciesController{
+    + DivideAgenciesController(agencyRepository)
+    + getAgencies()
+    + getPartitionSublist(agencyList, numAgenciesToDivide)
+    + divideSetOfAgencies(partitionSublist)
+}
+
+class Repositories{
+    - Repositories()
+    + getInstance() : Repositories
+    + getAgencyRepository()
+}
+
+class AgencyRepository{
+    + getPartitionSublist(agencyList, numAgenciesToDivide)
+    + getNumberPropertiesPerAgency(partitionSublist)
+    + getOrdersFromAgency(agency)
+}
+
+class DivideAgenciesAlgorithm{
+    - static final int DIFFERENCE
+    - static final int MIN_DIFFERENCE
+    - static final int MIN_DIFFERENCE_INDEX
+    + static divideSetOfAgencies(numPropertiesInAgenciesList)
+    - static verifyIfDifferenceIsMin(differenceArray, i)
+    - static calculatePowerNum(n)
+    - static convertIntToBinary(i, n)
+    - static createSublists(numPropertiesInAgenciesList, binaryString, zeroList, oneList, n)
+    - static calculateDifferenceOfTheSum(numPropertiesInAgenciesList, binaryString, n, zeroList, oneList)
+    - static calculateAbsoluteValue(x)
+    - static sublistSum(sublist)
+}
+
+class SublistsAndSumDifference{
+    - int[] inputArray
+    - int[] oneList
+    - int[] zeroList
+    - int difference
+    + SublistsAndSumDifference(inputArray, oneList, zeroList, difference)
+}
+
+
+DivideAgenciesUI ..> DivideAgenciesController
+
+DivideAgenciesController ..> Repositories : repositories
+DivideAgenciesController ..> AgencyRepository : agencyRepository
+DivideAgenciesController ..> DivideAgenciesAlgorithm : divideAgenciesAlgorithm
+
+Repositories --> Repositories : instance
+Repositories --> AgencyRepository : agencyRepository
+
+DivideAgenciesAlgorithm --> SublistsAndSumDifference : creates
+
+@enduml

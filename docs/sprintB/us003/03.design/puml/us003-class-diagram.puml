@@ -1,0 +1,97 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class RegisterEmployeeUI
+
+class RegisterEmployeeController{
+    + RegisterEmployeeController(roleRepository, agencyRepository)
+    + getRoles()
+    + getAgencies()
+    + registerEmployee(name, passportCardNum, taxNumber, address, emailAddress, \nphoneNumber, chosenRole, chosenAgencyId)
+    - getRolesBySelection(chosenRole)
+    - getAgenciesBySelection(chosenAgencyId)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getRoleRepository()
+    + getAgencyRepository()
+}
+
+class RoleRepository{
+    + getRolesBySelection(chosenRole)
+}
+
+class AgencyRepository{
+    + getAgenciesBySelection(chosenAgencyId)
+}
+
+class Agency{
+    - Integer id
+    - String designation
+    - String emailAddress
+    - String phoneNumber
+    + Agency(id, designation, emailAddress, phoneNumber)
+    + registerEmployee(name, passportCardNum, taxNumber, address, emailAddress, \nphoneNumber, role, agency)
+    - addEmployee(employee)
+    - validateEmployee(employee)
+}
+
+class Employee{
+    - String name
+    - Integer passportCardNum
+    - Integer taxNumber
+    - String phoneNumber
+    - String emailAddress
+    - generatePassword()
+}
+
+class PasswordGenerator{
+    + generatePassword()
+}
+
+class Address{
+    - String street
+    - String cityName
+    - String districtName
+    - String stateAcronym
+    - Integer zipCode
+}
+
+class Role {
+    - String chosenRole
+    + Role(chosenRole)
+}
+
+RegisterEmployeeController ..> Repositories : repositories
+RegisterEmployeeController ..> AgencyRepository : agencyRepository
+RegisterEmployeeController ..> RoleRepository : roleRepository
+RegisterEmployeeController ..> Agency : agency
+
+RegisterEmployeeUI ..> RegisterEmployeeController
+
+Repositories --> Repositories : instance
+Repositories --> "1" RoleRepository
+Repositories --> "1" AgencyRepository
+
+Agency "1" --> "1..*" Employee : employs
+
+Employee --> Address : address
+Employee "1" --> "1..*" Role : role
+PasswordGenerator "1" --> "1" Employee: generates password
+
+RoleRepository "1" --> "1..*" Role : role
+
+AgencyRepository "1" --> "1..*" Agency : agency
+
+
+@enduml

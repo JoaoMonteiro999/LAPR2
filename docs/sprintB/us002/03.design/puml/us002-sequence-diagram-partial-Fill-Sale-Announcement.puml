@@ -1,0 +1,26 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+participant ":SaleAnnouncement" as Sale
+participant "Property" as Prop
+
+
+-> Sale: fillSaleAnnouncement()
+
+activate Sale
+group fillSaleAnnouncement
+Sale-> Prop** : Property(area, cityCenter, \nprice)
+
+alt type = apartment
+                                Sale -> Prop : fillProperty(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, numBedrooms,numBathrooms,\nnumParkingSpaces,owner,photographs)
+                                activate Prop
+                                else type = house
+                                Sale -> Prop : fillProperty(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, numBedrooms,numBathrooms,\nnumParkingSpaces, basement,\ninhabitableLoft, sunExposure,\nowner,photographs)
+                                else type = land
+                                Sale -> Prop : fillProperty(district,state,\ncity,street,zip-code,propertyType,\ntransactionType,owner,photographs)
+                                end alt
+end
+@enduml

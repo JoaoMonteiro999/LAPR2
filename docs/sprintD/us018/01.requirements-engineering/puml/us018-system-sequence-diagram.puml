@@ -1,0 +1,43 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Store Manager" as SM
+participant ":System" as System
+
+activate SM
+
+    SM -> System : asks to analyse the deals made
+    activate System
+
+        System --> SM : shows the different regression models and asks to select one
+    deactivate System
+
+    SM -> System : selects a regression model
+    activate System
+
+        alt if it is simple linear regression
+
+            System --> SM : shows regression parameters and asks to select one
+        deactivate System
+
+            SM -> System : selects the regression parameter
+            activate System
+        end
+
+            System --> SM : asks the significance value to consider
+        deactivate System
+
+        SM -> System : enters the significance value
+        activate System
+
+            System --> SM : shows selected regression model and all the required statistics
+        deactivate System
+deactivate SM
+
+@enduml

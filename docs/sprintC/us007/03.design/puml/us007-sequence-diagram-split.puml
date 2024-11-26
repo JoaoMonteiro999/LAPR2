@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregistered User" as U_User
+participant ":RegisterClientUI" as UI
+participant ":RegisterClientController" as CTRL
+participant ":Administrator" as ADM
+
+
+
+activate U_User
+
+        U_User -> UI : asks to be registered in the system
+        activate UI
+
+            UI -> CTRL** : create
+            UI --> U_User : requests the required data to register
+        deactivate UI
+
+        U_User -> UI : types requested data (name, passport card number, \ntax number, email address, phone number, address, password)
+        activate UI
+
+            UI -> U_User : shows the requested data
+        deactivate UI
+
+        U_User -> UI : submits data
+        activate UI
+
+            UI -> CTRL : registerClient(name, passport card number, \ntax number, email address, phone number, address, password)
+            activate CTRL
+
+                CTRL -> ADM : registerClient(name, passport card number, \ntax number, email address, phone number, address, password)
+                activate ADM
+
+                    ref over ADM
+                        Register Client
+                    end ref
+
+                    ADM --> CTRL : client
+                deactivate ADM
+
+                CTRL --> UI : client
+
+            deactivate CTRL
+
+            UI --> U_User : displays operation success
+        deactivate UI
+
+deactivate U_User
+
+@enduml

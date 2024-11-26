@@ -1,0 +1,39 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+participant ":VisitiScheduleController" as CTRL
+participant ":visitScheduleRequest" as visit
+participant "scheduleRequestRepository:\n ScheduleRequestRepository" as schdlRep
+
+
+autonumber 23
+-> CTRL: submitScheduleRequest
+
+autonumber 23.1
+activate CTRL
+    group Create Visit Request
+
+        activate CTRL
+        CTRL -> visit : createVisitRequest
+        activate visit
+
+        visit -> CTRL : visitRequest
+        deactivate visit
+
+
+        CTRL -> schdlRep : addScheduleRequest (visitRequest)
+        activate schdlRep
+
+        schdlRep -> CTRL :
+        deactivate schdlRep
+
+    end group
+    autonumber 24
+    <-- CTRL : validRequest
+deactivate CTRL
+
+
+@enduml

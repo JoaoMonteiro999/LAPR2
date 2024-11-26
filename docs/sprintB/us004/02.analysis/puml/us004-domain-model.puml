@@ -1,0 +1,68 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US4
+
+class Owner{
+    cardNumber
+    taxNumber
+    email
+    phoneNumber
+}
+
+class Advertisement{
+    AdvertisementDate
+}
+
+class Property {
+    area
+    cityCenterDistance
+    price
+    photograph
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class Dwelling {
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class Apartment
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class Equipment
+
+class Land
+
+Owner "1" - "0…*" Advertisement: makes >
+
+Advertisement "1" - "1" Property: contains >
+
+Property "1" - "1" Address: located at >
+Property <|-- Dwelling
+Property <|-- Land
+
+Dwelling <|-- Apartment
+Dwelling <|-- House
+Dwelling "1" - "1...*" Equipment: has >
+
+@enduml

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.StoreNetworkManagerUS17Controller">
+<top>
+    <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+            <Menu mnemonicParsing="false" text="Back">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#goBack" text="Go back" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <items>
+                    <MenuItem fx:id="btnHelp" mnemonicParsing="false" onAction="#showBoxWithHelp" text="Help" />
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+</top>
+<center>
+    <BorderPane prefHeight="397.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <top>
+            <Label text="List Deals Made" BorderPane.alignment="CENTER">
+                <font>
+                    <Font size="24.0" />
+                </font>
+            </Label>
+        </top>
+         <center>
+            <ListView fx:id="listDeals" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
+         <bottom>
+            <Label fx:id="labelMessage" text="Please select a sorting Algorithm and Order and press Refresh" BorderPane.alignment="CENTER" />
+         </bottom>
+    </BorderPane>
+</center>
+   <bottom>
+      <FlowPane BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="50.0" />
+         </BorderPane.margin>
+         <children>
+            <Label text=" Algorithm: " />
+            <ComboBox fx:id="comboAlgorithm" prefWidth="150.0" />
+            <Label text=" Order: " />
+            <ComboBox fx:id="comboSortOrder" prefWidth="150.0" />
+            <Label text="    " />
+            <Button fx:id="btnRefresh" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showList" prefHeight="50.0" prefWidth="150.0" text="Refresh">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </Button>
+         </children>
+      </FlowPane>
+   </bottom>
+</BorderPane>

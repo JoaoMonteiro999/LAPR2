@@ -1,0 +1,2 @@
+Write bellow the sorting algorithm method between 'selection' and 'bubble':
+selection

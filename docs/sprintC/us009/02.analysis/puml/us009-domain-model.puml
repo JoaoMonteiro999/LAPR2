@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US9
+
+
+class Client {
+    name
+    email
+    phoneNumber
+    password
+    taxNumber
+    IDcardNumber
+}
+
+class Agent {
+
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class ScheduleVisit{
+    name
+    phoneNumber
+    date
+    startTime
+    endTime
+
+}
+
+
+
+Client "1" -- "*" ScheduleVisit : propose >
+Client "1" - "1" Property :> can see
+Property --|> ScheduleVisit
+ScheduleVisit "1" -- "*" Agent : validates <
+
+
+
+
+@enduml

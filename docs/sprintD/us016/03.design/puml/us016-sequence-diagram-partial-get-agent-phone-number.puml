@@ -1,0 +1,46 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'hide footbox
+participant ":BookingRequestController" as CTRL
+
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+
+autonumber 18
+-> CTRL : getAgentPhoneNumberFromSession()
+autonumber 18.1
+
+activate CTRL
+
+    group Get Agent Phone Number
+
+       CTRL -> _APP: getInstance()
+       activate _APP
+           _APP -> CTRL: appSession
+       deactivate _APP
+
+       CTRL -> APP: getCurrentSession()
+       activate APP
+
+           APP --> CTRL: currentSession
+       deactivate APP
+
+       CTRL -> SESSION: agentPhoneNumber = getUserPhoneNumber()
+       activate SESSION
+
+           SESSION --> CTRL: agentPhoneNumber
+       deactivate SESSION
+
+    end
+    autonumber 19
+
+    <-- CTRL : agentPhoneNumber
+deactivate CTRL
+
+@enduml

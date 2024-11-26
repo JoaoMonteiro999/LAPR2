@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":Agency" as STR
+participant ":Employee" as EMP
+participant ":PasswordGenerator" as PG
+
+autonumber 18
+-> STR : registerEmployee(name, passport card \nnumber, tax number, address, email address, \ncontact telephone number, role, agency)
+
+autonumber 18.1
+activate STR
+    group Register Employee
+
+        STR -> EMP** : registerEmployee(name, passportCardNum, \ntaxNumber, address, emailAddress, \nphoneNumber, role, agency)
+        activate EMP
+
+                                EMP -> PG : generatePassword()
+                                activate PG
+                                    PG -> PG : generatePassword()
+                                    activate PG
+                                        PG --> PG
+                                    deactivate PG
+
+                                    PG --> EMP
+                                deactivate PG
+
+                            deactivate EMP
+
+                            STR -> STR : addEmployee(employee)
+                            activate STR
+
+                                STR -> STR : validateEmployee(employee)
+                                activate STR
+                                    STR --> STR
+                                deactivate STR
+
+                            STR --> STR
+                            deactivate STR
+    end
+
+    autonumber 19
+    <-- STR : employee
+deactivate STR
+
+
+@enduml

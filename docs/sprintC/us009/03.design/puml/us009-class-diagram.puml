@@ -1,0 +1,90 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class VisitScheduleUI{
+}
+
+
+
+class ScheduleRequestRepository {
+    List<VisitScheduleRequest> visitScheduleRequests
+    +getVisitScheduleRequestsList
+
+}
+
+class Property{
+-int area
+-int cityCenter
+-int price
++Property()
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getScheduleRequestRepository()
+    +getvisitRequestRepository()
+    +getPropertiesRepository
+
+
+}
+
+
+class PropertyRepository {
+    + getPropertiesList()
+    +getPropertiesByPropertyType(propertyType)
+    +getPropertiesByPrice(propertyPrice)
+    +getPropertiesByNumberOfRooms(numberOfRooms)
+    +getPropertiesByTypeOfBusiness(typeBusiness)
+}
+
+class VisitScheduleController {
+    +submitVisitScheduleRequest(Property property, LocalDate date, LocalTime from, LocalTime to)
+
+}
+
+class VisitScheduleRequest{
+VisitScheduleRequest(Property property, Client client, LocalDate date, LocalTime from, LocalTime to)
+
+}
+
+class User {
+    - String name
+    - String email
+    - Integer phoneNumber
+    - String password
+
+}
+
+
+
+VisitScheduleUI ..>VisitScheduleController
+
+Repositories -> Repositories : instance
+
+VisitScheduleController ..> Repositories : repositories
+
+Repositories --> ScheduleRequestRepository
+
+VisitScheduleController ..> ScheduleRequestRepository : ScheduleRequestRepository
+
+ScheduleRequestRepository --> VisitScheduleRequest
+
+VisitScheduleController .> PropertyRepository : PropertyRepository
+
+Repositories --> PropertyRepository
+
+PropertyRepository --> Property
+
+VisitScheduleController ..> User : user
+
+User "1" -- "*" VisitScheduleRequest : Propose >
+@enduml

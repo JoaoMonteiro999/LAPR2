@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as ADM
+participant ":OrdersUI" as UI
+participant ":OrdersController" as CTRL
+participant "propertyRepository:\nPropertyRepository" as propertyRepository
+participant "ordersRepository:\nOrdersRepository" as ordersRepository
+participant "advertisementRepository:\nAdvertisementRepository" as advertisementRepository
+
+activate ADM
+
+    ADM -> UI : asks to display orders made to his properties
+    activate UI
+
+            UI -> CTRL : getAgentProperties()
+            activate CTRL
+
+                CTRL -> propertyRepository : getAgentProperties()
+                activate propertyRepository
+
+                    propertyRepository -> CTRL : AgentPropertyList
+                    deactivate propertyRepository
+
+                    CTRL -> CTRL : sortPropertiesByOldest()
+
+                    CTRL -> UI : AgentPropertyList
+                    deactivate CTRL
+
+    UI --> ADM : shows the list of properties his responsible for and asks to selet one
+    deactivate UI
+
+    ADM -> UI : selects the property to see the orders available
+    activate UI
+
+            UI -> CTRL : getPropertyOrders()
+            activate CTRL
+
+                CTRL -> ordersRepository : getPropertyOrders()
+                activate ordersRepository
+
+                    ordersRepository -> CTRL : PropertyOrdersList
+                    deactivate ordersRepository
+
+                    CTRL -> CTRL : sortOrdersByAmount()
+
+                    CTRL -> UI : OrdersList
+                    deactivate CTRL
+
+    UI --> ADM : show a list of orders made to the chosen property
+    deactivate UI
+
+    ADM -> UI : selects the order and accepts or rejects it
+    activate UI
+
+            alt accept
+
+            UI -> CTRL : acceptOrder()
+            activate CTRL
+
+                CTRL -> ordersRepository : acceptOrder()
+                activate ordersRepository
+
+                    ordersRepository -> ordersRepository : rejectOthers()
+
+                    ordersRepository -> ordersRepository : sendAcceptEmailToClient()
+
+                    ordersRepository -> advertisementRepository : deletePropertyAdvertisement()
+                    activate advertisementRepository
+
+                    advertisementRepository -> ordersRepository : success
+                    deactivate advertisementRepository
+
+                    ordersRepository -> CTRL : Order
+                    deactivate ordersRepository
+
+                    CTRL -> UI : Order
+                    deactivate CTRL
+
+            else reject
+
+            UI -> CTRL : rejectOrder()
+                        activate CTRL
+
+                CTRL -> ordersRepository : rejectOrder()
+                activate ordersRepository
+
+                    ordersRepository -> ordersRepository : sendRejectEmailToClient()
+
+                    ordersRepository -> CTRL : Order
+                    deactivate ordersRepository
+
+                    CTRL -> UI : Order
+                    deactivate CTRL
+
+            end alt
+
+        UI --> ADM : shows operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

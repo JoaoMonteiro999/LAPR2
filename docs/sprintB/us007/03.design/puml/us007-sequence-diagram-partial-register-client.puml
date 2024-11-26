@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":Administrator" as ADM
+participant ":Client" as Client
+
+autonumber 8
+-> ADM : registerClient(name, passport card number, \ntax number, email address, phone number, address, password)
+
+autonumber 8.1
+activate ADM
+    group Register Client
+
+         ADM -> Client** : registerClient(name, passport card number, \ntax number, email address, phone number, address, password)
+        ADM -> ADM : addClient(client)
+        activate ADM
+
+            ADM -> ADM : validateClient(client)
+            activate ADM
+
+                ADM --> ADM
+            deactivate ADM
+
+            ADM --> ADM
+        deactivate ADM
+    end
+
+    autonumber 9
+    <-- ADM : client
+deactivate ADM
+
+
+@enduml

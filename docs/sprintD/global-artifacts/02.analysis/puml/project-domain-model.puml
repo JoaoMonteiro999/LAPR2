@@ -1,0 +1,217 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+'skinparam linetype ortho
+'left to right direction
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+'title Domain Model
+
+'class Platform {
+'  -description
+'}
+
+class Agency{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+
+class Administrator
+
+class Agent
+
+class Commission{
+    commissionValue
+}
+
+class CommissionType {
+ commissionType
+}
+
+class BookinkRequest {
+
+
+}
+
+class StoreManager
+
+class StoreNetworkManager
+
+class Client
+
+class Person{
+        name
+        passportCardNum
+        taxNumber
+        emailAddress
+        phoneNumber
+}
+
+class Owner
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+
+
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+
+
+class Equipment{
+    centralHeating
+    airConditioning
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class Photograph{
+    linkToPhotograph
+}
+
+class Employee{
+
+}
+
+class OrganizationRole{
+    roleName
+}
+
+class Request{
+    publicationDate
+}
+
+class Announcement{
+    announcementDate
+}
+
+class Visit{
+    visitDate
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class PropertyType{
+    propertyType
+}
+
+class BusinessType{
+    businessType
+}
+
+class Lease{
+    leaseValue
+    contractDuration
+}
+
+class Sale{
+    saleValue
+}
+
+class Order{
+    orderAmount
+}
+
+class LegacySystem
+
+class DealAnalysis{
+}
+
+Address "1" -- "1" Person : located at <
+Address "1" -- "1" Agency : located at <
+Agent "1" -- "1..*" Property : responsible for >
+Agency "1" -- "1" StoreManager : manages <
+Agency "1" -- "1..*" Employee : owns >
+
+Announcement "1" -- "1" Property : contains >
+
+OrganizationRole <|-- Administrator
+OrganizationRole <|-- Agent
+OrganizationRole <|-- StoreManager
+OrganizationRole <|-- StoreNetworkManager
+
+OrganizationRole "1..*" -- "1" Employee : plays <
+
+Administrator "1" -- "1..*" Employee : registers >
+Administrator "1" -- "1" LegacySystem : imports >
+
+LegacySystem "1" -- "1" Property : contains >
+LegacySystem "1" -- "1" Owner : contains >
+LegacySystem "1" -- "1" Agency : contains >
+LegacySystem "1" -- "1" Commission : contains >
+
+Client "1" -- "1..*" Property : buys/rents >
+Client "1" -- "1..*" Order : places >
+
+Order "1" -- "1" Property : contains >
+
+Owner "1" -- "1..*" Request : makes >
+
+Request "1" -- "1" Property : contains >
+
+Property "1" -- "1" Address : located at >
+Property <|-- Dwelling
+
+Photograph "1..*" -- "1" "Property" : has <
+
+Dwelling "1" -- "1..*" Equipment : has >
+Dwelling <|-- House
+
+StoreManager "1" -- "1..*" DealAnalysis : does a >
+DealAnalysis -- Property : analyses >
+
+Agent "1" -- "1..*" Announcement : reviews >
+Agent "1" -- "1..*" Request : publishes >
+Agent "1" -- "1..*" Visit : schedules >
+Agent --|> Person
+
+Commission "1" -- "1" Agent : defines <
+Commission "1" -- "1" CommissionType : categorized in >
+
+Visit "1" -- "1" Property : located at >
+
+PropertyType "1" -- "1..*" Property : categorized by <
+
+StoreNetworkManager "1" -- "2..*" Agency : manages >
+StoreNetworkManager "1" -- "2..*" Agency : divides >
+
+Owner "1" -- "1..*" Property: sells/rents >
+Owner --|> Person
+
+Person <|-- Client
+Person <|-- Employee
+
+Property "1" -- "1" BusinessType : classified as >
+
+BusinessType "1" -- "1" Lease : categorized as >
+BusinessType "1" -- "1" Sale : categorized as >
+
+
+Client "1" -- "1..*" BookingRequest : requests >
+Agent "1" -- "1..*" BookingRequest : views list >
+Visit "1" -- "1" BookingRequest : turns to <
+BookingRequest "1" -- "1" Property : refers to >
+
+@enduml

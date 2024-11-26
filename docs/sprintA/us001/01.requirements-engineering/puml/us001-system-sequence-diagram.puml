@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Unregistered user" as user
+participant ":System" as System
+
+activate user
+
+    user -> System : asks to display listed properties
+    activate System
+
+        System --> user : requests the filter criteria for the search (type of business, type of properties, number of rooms, price, location)
+    deactivate System
+
+    user -> System : selects filter criteria
+
+        System --> user : show a list of properties with selected filters
+    deactivate System
+
+
+
+@enduml

@@ -1,0 +1,126 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Client" as Client
+participant ":PlaceOrderUI" as UI
+participant ":PlaceOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "orderRepository:\nOrderRepository" as OrderRepository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant ":ListPropertiesUI" as ListPropertiesUI
+
+
+activate Client
+
+        Client -> UI : asks to place an order to purchase property
+        activate UI
+
+            UI -> CTRL** : create
+            activate CTRL
+
+                CTRL -> CTRL : getOrders()
+                activate CTRL
+
+                    ref over CTRL
+                        Get Order List
+                    end ref
+
+                    CTRL --> CTRL : orderList
+                deactivate CTRL
+
+            deactivate CTRL
+
+            UI -> CTRL : displayProperties()
+            activate CTRL
+
+                CTRL -> ListPropertiesUI : run
+                activate ListPropertiesUI
+                deactivate ListPropertiesUI
+
+            deactivate CTRL
+
+            UI --> Client : displays available properties
+        deactivate UI
+
+        Client -> UI : selects property
+        activate UI
+
+            UI --> Client : requests data (orderAmount)
+        deactivate UI
+
+        loop until orderAmount is "equal" or "lower"
+
+            Client -> UI : types requested data
+            activate UI
+
+                UI -> CTRL : checkOrderAmountIsValid(property, orderAmount)
+                activate CTRL
+
+                    CTRL -> OrderRepository : checkOrderAmountIsValid(property, orderAmount)
+                    activate OrderRepository
+
+                        OrderRepository --> CTRL : true
+                    deactivate OrderRepository
+
+                    CTRL --> UI : true
+
+                deactivate CTRL
+
+        end
+
+            UI --> Client : shows requested data
+        deactivate UI
+
+        Client -> UI : submits data
+        activate UI
+
+            UI -> CTRL : placeOrder (orderAmount, property)
+            activate CTRL
+
+                CTRL -> CTRL : getClientEmailFromSession()
+                activate CTRL
+
+                    ref over CTRL
+                        Get Client Email
+                    end ref
+
+                    CTRL -> CTRL : clientEmail
+                deactivate CTRL
+
+                |||
+
+                CTRL -> OrderRepository : placeOrder (property, orderAmount, clientEmail)
+                activate OrderRepository
+
+                    ref over OrderRepository
+                        Place Order
+                    end ref
+
+                    OrderRepository --> CTRL : order
+                deactivate OrderRepository
+
+                CTRL --> UI : order
+            deactivate CTRL
+
+        alt orderAmount is "equal"
+
+            UI --> Client : shows message and shows operation success
+
+        else orderAmount is "lower"
+
+            UI --> Client : shows operation success
+        end
+
+        deactivate UI
+
+deactivate Client
+
+@enduml

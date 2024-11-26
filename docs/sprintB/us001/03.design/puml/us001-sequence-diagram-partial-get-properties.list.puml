@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":ListPropertiesController" as CTRL
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as repositoriesSingleton
+participant "propertiesRepository:\nPropertiesRepository" as plistRepository
+
+
+autonumber 3
+-> CTRL:getPropertiesList
+
+autonumber 3.1
+activate CTRL
+    group Get Properties List
+
+          activate CTRL
+              CTRL -> repositories : getInstance()
+              activate repositories
+
+              repositories --> CTRL: repositories
+              deactivate repositories
+
+             CTRL ->  repositoriesSingleton : getPropretiesRepository()
+             activate repositoriesSingleton
+
+             repositoriesSingleton --> CTRL : propertiesRepository
+             deactivate repositoriesSingleton
+
+
+             CTRL -> plistRepository : getPropretiesList()
+             activate plistRepository
+
+             plistRepository --> CTRL : propertiesList
+             deactivate plistRepository
+
+    end group
+    autonumber4
+    <-- CTRL : propertiesList
+deactivate CTRL
+
+
+@enduml

@@ -1,0 +1,119 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US2
+
+
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+
+class Request {
+    publicationDate
+    price
+}
+
+
+class Agent {
+
+
+}
+
+class Owner
+class Advertisement{
+    AdvertisementDate
+}
+
+class Commission{
+    TypeOfCommission
+    CommissionValue
+}
+class Person{
+        name
+        passportCardNum
+        taxNumber
+        emailAddress
+        phoneNumber
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class Photograph{
+    linkToPhotograph
+}
+class OrganizationRole{
+    roleName
+}
+class BusinessType{
+    businessType
+}
+class Lease{
+    leaseValue
+    contractDuration
+}
+
+class Sale{
+    saleValue
+}
+class PropertyType{
+    propertyType
+}
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+
+
+
+
+
+
+Dwelling <|-- House
+OrganizationRole "1..*" -- "1" Employee : plays <
+OrganizationRole <|-- Agent
+BusinessType "1" -- "1" Lease : categorized as >
+BusinessType "1" -- "1" Sale : categorized as >
+Request "1" -- "1" Property : contains >
+Property "1" -- "1" Address : located at >
+Property <|-- Dwelling
+Photograph "1..*" -- "1" "Property" : has <
+Address "1" -- "1" Person : located at <
+Owner --|> Person
+Person <|-- Employee
+Owner "1" --- "1..*" Request: makes >
+Agent "1" --- "1..*" Request: reviews  >
+Address "1" -- "1" Owner : located at <
+Agent "1" -- "1..*" Advertisement : publishes >
+Advertisement "1" -- "1" Request : can be >
+Commission "1" -- "1" Agent : defines <
+Property "1" -- "1" BusinessType : classified as >
+Owner "1" -- "1..*" Property: sells/rents >
+PropertyType "1" -- "1..*" Property : categorized by <
+@enduml

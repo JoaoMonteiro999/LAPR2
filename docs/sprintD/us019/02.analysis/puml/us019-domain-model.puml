@@ -1,0 +1,48 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US19
+
+
+class StoreNetworkManager
+
+class Agency{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class Order{
+    clientEmail
+    orderAmount
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+
+Agency "1" -- "1" Address : located at >
+StoreNetworkManager "1" -- "2..*" Agency : divides >
+Agency "1" -- "1..*" Order : contains >
+Order "1" -- "1" Property : contains >
+
+@enduml

@@ -1,0 +1,127 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Owner" as ADM
+participant ":CreateRequestUI" as UI
+participant ":CreateRequestController" as CTRL
+participant "AdvertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+participant "AgentRepository:\nAgentRepository" as AgentRepository
+
+activate ADM
+
+        ADM -> UI : asks to create a request
+
+        activate UI
+
+'            UI --> ADM : requests data (reference, description,  informal \n description, technical description, duration, cost)
+            'create CTRL
+            UI -> CTRL** : create
+
+            UI --> ADM : sale or rent?
+        deactivate UI
+
+        ADM -> UI : selects wanted option
+        activate UI
+
+        UI -> ADM : asks the property type
+        deactivate UI
+
+    ADM -> UI : selects property type
+    activate UI
+
+    alt type = apartment
+
+    UI --> ADM : requests the apartment characteristics(area, cityCenterDistance, street, cityName, \ndistrictName, stateAcronym, zip-code, numBedrooms,numBathrooms,numParkingSpaces, arrayEquipment)
+
+    else type = house
+
+    UI --> ADM : requests the house characteristics(area, cityCenterDistance, street, cityName, \ndistrictName, stateAcronym, zip-code, numBedrooms,numBathrooms,numParkingSpaces, \nbasement,inhabitableLoft, sunExposure, arrayEquipment)
+
+    else type = land
+
+    UI --> ADM : requests the land characteristics(area, cityCenterDistance , street, cityName, \ndistrictName, stateAcronym, zip-code)
+    deactivate UI
+
+    end alt
+
+    ADM --> UI : fills the property characteristics
+    activate UI
+
+    UI --> ADM : aks to insert photos
+    deactivate UI
+
+    ADM -> UI : inserts photos(at least one)
+    activate UI
+
+    UI -> CTRL : getAgents()
+        activate CTRL
+
+                CTRL -> AgentRepository : getAgents()
+                activate AgentRepository
+
+                AgentRepository -> CTRL : AgentList
+                deactivate AgentRepository
+
+                CTRL -> UI : AgentList
+                deactivate CTRL
+
+        UI --> ADM: displays agents list and asks to select one
+        deactivate UI
+
+    ADM -> UI : selects agent
+        activate UI
+
+    UI -> CTRL : createRequest(anouncementDate)
+        activate CTRL
+
+        CTRL -> AdvertisementRepository : createRequest(anouncementDate)
+
+    CTRL -> Property** : createProperty(area, cityCenterDistance, price)rex
+
+                alt type = apartment
+                                    CTRL -> Property : createApartment(street, cityName, districtName, stateAcronym, zip-code, \nnumBedrooms, numBathrooms, numParkingSpaces, arrayPhotographs, arrayEquipment, propertyType)
+                                    activate Property
+                                    else type = house
+                                    CTRL -> Property : createHouse(street, cityName, districtName, stateAcronym, zip-code, \nnumBedrooms,numBathrooms,numParkingSpaces, basement,\ninhabitableLoft, sunExposure, arrayPhotographs, arrayEquipment, propertyType)
+                                    else type = land
+                                    CTRL -> Property : createLand(street, cityName, districtName, stateAcronym, zip-code, \nphotographs, propertyType)
+                                    end alt
+                Property -> PropertyType** : PropertyType(propertyType)
+
+                alt type = apartment
+                Property -> Dwelling** : createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces)
+
+                else type = house
+
+                Property -> Dwelling : createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces,basement,\ninhabitableLoft,sunExposure)
+
+                Property -> House** : createHouse(basement,inhabitableLoft,\nsunExposure)
+
+                end alt
+
+                Property -> Address** : createAddress(street, cityName, districtName, stateAcronym, zip-code)
+
+                loop for each photograph
+                Property -> Photograph** : createPhotograph(linkToPhotograph)
+                end loop
+
+                loop for each equipment
+                Property -> Equipment** : createEquipment(description)
+                end loop
+
+            Property --> CTRL : property
+
+            CTRL -> UI : request
+            deactivate CTRL
+
+    UI --> ADM: displays operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

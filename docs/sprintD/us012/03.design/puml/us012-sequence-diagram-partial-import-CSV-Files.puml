@@ -1,0 +1,157 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+participant ":ImportLegacyDataController" as CTRL
+participant "csvFileRepository\n:CSVFileRepository" as CSVFileRepository
+participant "announcementRepository\n:AnnouncementRepository" as AnnouncementRepository
+participant ":Announcement" as Announcement
+participant "AnnouncementDto:AnnouncementDto" as DTO_Announcement
+participant "ApartmentDto:ApartmentDto" as DTO_Apart
+participant "HouseDto:HouseDto" as DTO_House
+
+
+
+
+
+
+-> CTRL : importCSVFile(csvFile)
+        activate CTRL
+
+            CTRL -> CSVFileRepository : importCSVFile(csvFile)
+            activate CSVFileRepository
+
+                CSVFileRepository -> CSVFileRepository : importCSVFile(csvFile)
+                activate CSVFileRepository
+
+                loop csv file has lines
+
+                        alt type = apartment
+                            CSVFileRepository -> AnnouncementRepository : createAnnouncement(apartmentDto)
+                            activate AnnouncementRepository
+                            else type = house
+                            CSVFileRepository -> AnnouncementRepository : createAnnouncement(houseDto)
+                            else type = land
+                            CSVFileRepository -> AnnouncementRepository : createAnnouncement(dtoLand)
+                        end alt
+
+                        AnnouncementRepository -> DTO_Announcement : address = getAddress()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : propertyType = getPropertyType()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : transactionType = getTransactionType()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : area = getArea()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : cityCenter = getCityCenter()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : todayDate = getTodayDate()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        AnnouncementRepository -> DTO_Announcement : owner = getOwner()
+                        activate DTO_Announcement
+                        deactivate DTO_Announcement
+
+                        alt type = apartment
+
+                            AnnouncementRepository -> DTO_Apart : price = getPrice()
+                            activate DTO_Apart
+                            deactivate DTO_Apart
+
+                            AnnouncementRepository -> DTO_Apart : numBedrooms = getNumBedrooms()
+                            activate DTO_Apart
+                            deactivate DTO_Apart
+
+                            AnnouncementRepository -> DTO_Apart : numBathrooms = getNumBathrooms()
+                            activate DTO_Apart
+                            deactivate DTO_Apart
+
+                            AnnouncementRepository -> DTO_Apart : numParkingSpaces = getNumParkingSpaces()
+                            activate DTO_Apart
+                            deactivate DTO_Apart
+
+                            AnnouncementRepository -> Announcement** : createAnnouncement(address,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, todayDate,owner)
+
+                            else type = house
+
+                                AnnouncementRepository -> DTO_House : price = getPrice()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : numBedrooms = getNumBedrooms()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : numBathrooms = getNumBathrooms()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : numParkingSpaces = getNumParkingSpaces()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : basement = getBasement()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : inhabitableLoft = getInhabitableLoft()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> DTO_House : sunExposure = getSunExposure()
+                                activate DTO_House
+                                deactivate DTO_House
+
+                                AnnouncementRepository -> Announcement** : createAnnouncement(address,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, basement,\ninhabitableLoft, sunExposure, todayDate,owner)
+
+                            else type = land
+
+                                AnnouncementRepository -> Announcement** : createAnnouncement(address,propertyType,\ntransactionType, area, cityCenter, \nprice, todayDate,owner)
+                        end alt
+
+                        |||
+                        |||
+
+                        AnnouncementRepository -> AnnouncementRepository: addAnnouncement(announcement)
+                        activate AnnouncementRepository
+
+                            AnnouncementRepository -> AnnouncementRepository: validateAnnouncement(announcement)
+
+                            activate AnnouncementRepository
+                                AnnouncementRepository --> AnnouncementRepository
+                            deactivate AnnouncementRepository
+
+                            AnnouncementRepository --> AnnouncementRepository
+                        deactivate AnnouncementRepository
+
+                        AnnouncementRepository --> CSVFileRepository : announcement
+                    deactivate AnnouncementRepository
+                end
+
+                CSVFileRepository --> CSVFileRepository : announcement
+            deactivate CSVFileRepository
+
+            CSVFileRepository --> CTRL : announcement
+        deactivate CTRL
+<-- CTRL : announcement
+
+
+
+
+
+@enduml

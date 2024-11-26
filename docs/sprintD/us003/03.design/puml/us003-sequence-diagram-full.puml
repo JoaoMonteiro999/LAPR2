@@ -1,0 +1,204 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":RegisterEmployeeUI" as UI
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "roleRepository\n:RoleRepository" as RoleRepository
+participant "agencyRepository\n:AgencyRepository" as AgencyRepository
+participant ":Agency" as STR
+participant ":Employee" as EMP
+participant "employeeRepository\n:EmployeeRepository" as E_Repository
+participant ":PasswordGenerator" as PG
+
+
+
+activate ADM
+
+        ADM -> UI : asks to register a new employee
+
+        activate UI
+
+            UI -> CTRL** : create()
+
+            UI --> ADM : requests data (name, passportCardNum, \ntaxNumber, address, emailAddress, \nphoneNumber)
+
+        deactivate UI
+
+        ADM -> UI : types requested data
+
+        activate UI
+
+            UI -> CTRL : getRoles()
+            activate CTRL
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getRoleRepository()
+                activate PLAT
+
+                    PLAT --> CTRL : roleRepository
+                deactivate PLAT
+
+                CTRL -> RoleRepository : getRoles()
+                activate RoleRepository
+
+                    RoleRepository --> CTRL : roleList
+                deactivate RoleRepository
+
+                CTRL --> UI : roleList
+            deactivate CTRL
+
+            UI -> CTRL : getAgencies()
+            activate CTRL
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL : repositories
+                deactivate RepositorySingleton
+
+
+                CTRL -> PLAT : getAgencyRepository()
+                activate PLAT
+
+                    PLAT --> CTRL : agencyRepository
+                deactivate PLAT
+
+                CTRL -> AgencyRepository : getAgencies()
+                activate AgencyRepository
+
+                    AgencyRepository --> CTRL : agencyList
+                deactivate AgencyRepository
+
+                CTRL --> UI : agencyList
+            deactivate CTRL
+
+            UI --> ADM : shows roles list and asks to select
+        deactivate UI
+
+        loop until all wanted roles are chosen
+            ADM -> UI : selects role
+            activate UI
+        end
+
+                UI --> ADM : shows agencies list and asks to select one
+            deactivate UI
+
+            ADM -> UI : selects agency
+            activate UI
+
+            UI --> ADM : shows selected and requested data and asks to submit data
+        deactivate UI
+
+        ADM -> UI : submits data
+        activate UI
+
+            UI -> CTRL : registerEmployee(name, passportCardNum, \ntaxNumber, address, emailAddress, \nphoneNumber, chosenRole, chosenAgencyId)
+            activate CTRL
+
+                CTRL -> CTRL : getRolesBySelection(chosenRole)
+                activate CTRL
+
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL : repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getRoleRepository()
+                    activate PLAT
+
+                        PLAT --> CTRL : roleRepository
+                    deactivate PLAT
+
+                    CTRL -> RoleRepository : getRolesBySelection(chosenRole)
+                    activate RoleRepository
+
+                        RoleRepository --> CTRL : role
+                    deactivate RoleRepository
+
+                    CTRL --> CTRL : role
+                deactivate CTRL
+
+
+                |||
+                |||
+                CTRL -> CTRL : getAgenciesBySelection(chosenAgencyId)
+                activate CTRL
+
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL : repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getAgencyRepository()
+                    activate PLAT
+
+                        PLAT --> CTRL : agencyRepository
+                    deactivate PLAT
+
+                    CTRL -> AgencyRepository : getAgenciesBySelection(chosenAgencyId)
+                    activate AgencyRepository
+
+                        AgencyRepository --> CTRL : agency
+                    deactivate AgencyRepository
+
+                    CTRL --> CTRL : agency
+                deactivate CTRL
+
+                |||
+                |||
+                CTRL -> STR : registerEmployee(name, passportCardNum, \ntaxNumber, address, emailAddress, \nphoneNumber, role, agency)
+                activate STR
+
+                    STR -> EMP** : registerEmployee(name, passportCardNum, \ntaxNumber, address, emailAddress, \nphoneNumber, role, agency)
+                    activate EMP
+
+                        EMP -> PG : generatePassword()
+                        activate PG
+                            PG -> PG : generatePassword()
+                            activate PG
+                                PG --> PG
+                            deactivate PG
+
+                            PG --> EMP
+                        deactivate PG
+
+                    deactivate EMP
+
+                    STR -> STR : addEmployee(employee)
+                    activate STR
+
+                        STR -> STR : validateEmployee(employee)
+                        activate STR
+                            STR --> STR
+                        deactivate STR
+
+                    STR --> STR
+                    deactivate STR
+
+                    STR --> CTRL : employee
+                deactivate STR
+
+                CTRL --> UI : employee
+            deactivate CTRL
+
+            UI --> ADM : displays operation success
+        deactivate UI
+
+deactivate ADM
+
+@enduml

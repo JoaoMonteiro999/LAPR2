@@ -1,0 +1,62 @@
+Index: src/main/java/pt/ipp/isep/dei/esoft/project/ui/gui/AnalyseDealsGUIController.java
+===================================================================
+diff --git a/src/main/java/pt/ipp/isep/dei/esoft/project/ui/gui/AnalyseDealsGUIController.java b/src/main/java/pt/ipp/isep/dei/esoft/project/ui/gui/AnalyseDealsGUIController.java
+deleted file mode 100644
+--- a/src/main/java/pt/ipp/isep/dei/esoft/project/ui/gui/AnalyseDealsGUIController.java	
++++ /dev/null	
+@@ -1,55 +0,0 @@
+-package pt.ipp.isep.dei.esoft.project.ui.gui;
+-
+-import javafx.fxml.FXML;
+-import javafx.scene.control.Button;
+-import javafx.scene.control.ComboBox;
+-import javafx.scene.control.TextArea;
+-
+-import java.net.URL;
+-import java.util.ResourceBundle;
+-
+-public class AnalyseDealsGUIController {
+-
+-    @FXML
+-    private ResourceBundle resources;
+-
+-    @FXML
+-    private URL location;
+-
+-    @FXML
+-    private ComboBox<?> linearModelCombo;
+-
+-    @FXML
+-    private TextArea significanceLevelArea;
+-
+-    @FXML
+-    private Button confirmButton;
+-
+-    @FXML
+-    private ComboBox<?> parametersCombo;
+-
+-    @FXML
+-    void goBack(javafx.event.ActionEvent event) {
+-
+-    }
+-
+-    @FXML
+-    void showAboutMessage(javafx.event.ActionEvent event) {
+-
+-    }
+-
+-    @FXML
+-    void initialize() {
+-        assert linearModelCombo != null : "fx:id=\"linearModelCombo\" was not injected: check your FXML file 'analyseDeals.fxml'.";
+-        assert significanceLevelArea != null : "fx:id=\"significanceLevelArea\" was not injected: check your FXML file 'analyseDeals.fxml'.";
+-        assert confirmButton != null : "fx:id=\"confirmButton\" was not injected: check your FXML file 'analyseDeals.fxml'.";
+-        assert parametersCombo != null : "fx:id=\"parametersCombo\" was not injected: check your FXML file 'analyseDeals.fxml'.";
+-
+-    }
+-
+-
+-
+-
+-
+-
+-}

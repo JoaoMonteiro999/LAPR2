@@ -1,0 +1,177 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as Client
+participant ":ListDealsUI" as UI
+participant ":ListDealsController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "orderRepository:\nOrderRepository" as OrderRepository
+
+
+activate Client
+
+        Client -> UI : ask to list all deals made
+        activate UI
+
+            UI -> CTRL** : create
+
+
+
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL : repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getOrderRepository()
+            activate PLAT
+
+            PLAT --> CTRL : orderRepository
+            deactivate PLAT
+            deactivate CTRL
+
+            UI -> CTRL : getDealsMadeSortedByDate()
+            activate CTRL
+
+                    ref over CTRL
+                    Get Deals Made sorted by date
+                    end ref
+
+         CTRL --> UI : ListOfAllDealsMade
+         deactivate CTRL
+
+            UI --> Client : displays available properties sorted from \nthe most recent to the oldest one and asks \nto select one of the two sorting algorithms available
+        deactivate UI
+
+
+        alt sort with bubbleSort
+
+        Client -> UI : Selects bubblesort algorithm
+        activate UI
+
+        UI --> Client : asks to select sort order (ascending or descending)
+        deactivate UI
+
+        alt bubbleSort ascending order
+
+       Client -> UI : select ascending order
+       activate UI
+
+       UI -> CTRL : bubbleSort()
+       activate CTRL
+
+       CTRL -> OrderRepository : bubbleSort()
+       activate OrderRepository
+
+        OrderRepository -> OrderRepository : bubbleSort()
+
+        OrderRepository --> CTRL : sortedDeals
+        deactivate OrderRepository
+
+
+
+       CTRL --> UI : sortedDeals
+       deactivate CTRL
+
+       UI --> Client : displays sorted deals with ascending order
+        deactivate UI
+
+
+        else bubbleSort descending order
+
+         Client -> UI : select descending order
+         activate UI
+
+          UI -> CTRL : bubbleSort()
+         activate CTRL
+
+          CTRL -> OrderRepository : bubbleSort()
+         activate OrderRepository
+
+         OrderRepository -> OrderRepository : bubbleSort()
+
+         OrderRepository --> CTRL : sortedDeals
+         deactivate OrderRepository
+
+         CTRL --> UI : sortedDeals
+         deactivate CTRL
+
+        UI --> Client : displays sorted deals with descending order
+         deactivate UI
+
+
+        end
+
+
+        end
+
+alt sort with treeSort
+
+        Client -> UI : Selects treeSort algorithm
+        activate UI
+
+        UI -> Client : asks to select sort order (ascending or descending)
+        deactivate UI
+
+
+alt treeSort ascending order
+
+         Client -> UI : select ascending order
+                activate UI
+
+                UI -> CTRL : treeSort()
+                activate CTRL
+
+                CTRL -> OrderRepository : treeSort()
+                activate OrderRepository
+
+                 OrderRepository -> OrderRepository : TreeSort()
+
+                 OrderRepository --> CTRL : sortedDeals
+                 deactivate OrderRepository
+
+            CTRL --> UI : sortedDeals
+             deactivate CTRL
+
+         UI --> Client : displays sorted deals with ascending order
+         deactivate UI
+
+else treeSort descending order
+               Client -> UI : select descending order
+               activate UI
+
+                UI -> CTRL : treeSort()
+               activate CTRL
+
+                CTRL -> OrderRepository : treeSort()
+               activate OrderRepository
+
+               OrderRepository -> OrderRepository : treeSort()
+
+               OrderRepository --> CTRL : sortedDeals
+               deactivate OrderRepository
+
+               CTRL --> UI : sortedDeals
+               deactivate CTRL
+
+              UI --> Client : displays sorted deals with descending order
+               deactivate UI
+
+end
+end
+
+
+
+        deactivate UI
+
+deactivate Client
+
+@enduml

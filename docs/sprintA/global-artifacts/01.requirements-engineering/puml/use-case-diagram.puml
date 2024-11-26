@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+skinparam packageStyle rect
+
+
+actor UnregisteredUser
+actor Agent
+actor Administrator
+actor Owner
+
+rectangle System{
+
+    UnregisteredUser --- (UC1 - Display listed properties)
+
+    Agent --- (UC2 - Publish sale announcement)
+
+    Administrator --- (UC3 - Register employee)
+
+    Owner --- (UC4 - Submit a request for listing a property sale or rent)
+
+    Administrator --- (UC5 - Register store)
+
+    Administrator --- (UC6 - Specify states, districts and cities in the system)
+}
+
+@enduml

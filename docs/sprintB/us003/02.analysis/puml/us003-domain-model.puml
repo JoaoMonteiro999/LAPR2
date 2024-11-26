@@ -1,0 +1,58 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+title Domain Model US3
+
+class Store{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+
+class Employee{
+    name
+    passportCardNum
+    taxNumber
+    emailAddress
+    phoneNumber
+}
+
+class OrganizationRole{
+    roleName
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class Administrator
+
+class Agent
+
+class StoreManager
+
+class StoreNetworkManager
+
+Address "1" -- "1" Employee : located at <
+Address "1" -- "1" Store : located at <
+
+Store "1" -- "1..*" Employee : owns >
+
+OrganizationRole <|-- Administrator
+OrganizationRole <|-- Agent
+OrganizationRole <|-- StoreManager
+OrganizationRole <|-- StoreNetworkManager
+
+OrganizationRole "1..*" -- "1" Employee : plays <
+
+Administrator "1" -- "*" Employee : registers >
+
+@enduml

@@ -1,0 +1,129 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class AnalyseDealsUI
+
+class AnalyseDealsController{
+    + AnalyseDealsController(orderRepository)
+    + getAnalysisStatistics(chosenRegressionModel, chosenRegressionParameter, significanceValue)
+    + getRegressionParameters(chosenRegressionParameter)
+}
+
+class DealAnalysis{
+    + static getRegressionParameters(chosenRegressionParameter)
+    + static getRegressionModel(regressionParameters, significanceValue, isRegressionSLM)
+    - static addDataToSimpleRegression(regressionParameters)
+    - static createSimpleRegressionModel(regressionParameters, significanceValue, regression)
+    - static createMultipleRegressionModel(regressionParameters, significanceValue)
+}
+
+class SimpleLinearModel{
+    - final int SELECTED_REGRESSION_PARAMETER
+    - final int PROPERTY_PRICE
+    - double[][] regressionParameters
+    - int n
+    - double Sxy
+    - double Sxx
+    - double Syy
+    - double SE
+    - double SR
+    - double meanX
+    - double meanY
+    - double slope
+    - double intercept
+    - double squaredR
+    - double significanceValue
+    - SimpleRegression regression
+    + generateAnovaTable()
+    + calculateCoefficientConfidenceIntervals(isCoefficientSlope)
+    + calculateCoefficientHypothesisTests(isCoefficientSlope)
+    + getForecastPriceList()
+    + createAnalysisReport()
+}
+
+class MultipleLinearModel{
+    - final int PROPERTY_AREA
+    - final int DISTANCE_CENTRE
+    - final int NUM_BEDROOMS
+    - final int NUM_BATHROOMS
+    - final int NUM_PARKING_SPC
+    - final int PROPERTY_PRICE
+    - double[][] regressionParameters
+    - int n
+    - double SE
+    - double ST
+    - double SR
+    - double SE
+    - double SR
+    - double squaredR
+    - double squaredRAdjusted
+    - double[] standardErrorsParameters
+    - double significanceValue
+    - OLSMultipleLinearRegression regression
+    + getB()
+    + generateAnovaTable()
+    + calculateConfidenceIntervals()
+    + calculateHypothesisTests()
+    + getForecastPriceList()
+    + createAnalysisReport()
+}
+
+interface RegressionModel{
+    + generateAnovaTable()
+    + getForecastPriceList()
+}
+
+class OrderRepository{
+    + getRegressionParameters(chosenRegressionParameter)
+    - getPriceList()
+    - getPropertyAreaList()
+    - getDistanceCentreList()
+    - getNumBedroomsList()
+    - getNumBathroomsList()
+    - getNumParkingSpacesList()
+}
+
+class Repositories{
+    - Repositories()
+    + getInstance() : Repositories
+    + getOrderRepository()
+}
+
+class RegressionModelDTO {
+    - String analysisReport
+    + getRegressionModel()
+    + getAnalysisReport()
+}
+
+class RegressionModelMapper{
+    + toDTO(regressionModel, analysisReport)
+}
+
+AnalyseDealsUI ..> AnalyseDealsController
+AnalyseDealsUI ..> RegressionModelDTO
+
+AnalyseDealsController ..> Repositories : repositories
+AnalyseDealsController ..> OrderRepository : orderRepository
+AnalyseDealsController ..> DealAnalysis : dealAnalysis
+AnalyseDealsController ..> RegressionModelMapper
+AnalyseDealsController ..> RegressionModelDTO
+
+RegressionModelMapper ..> RegressionModelDTO
+RegressionModelMapper ..> RegressionModel
+
+Repositories --> Repositories : instance
+
+DealAnalysis --> RegressionModel : regressionModel
+
+RegressionModel <|.. SimpleLinearModel
+RegressionModel <|.. MultipleLinearModel
+
+@enduml

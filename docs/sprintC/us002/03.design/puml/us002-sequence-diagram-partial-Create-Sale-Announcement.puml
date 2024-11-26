@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant "Repository:\nSaleAnnouncementRepository" as SaleRep
+participant "SaleAnnouncement" as Sale
+autonumber 22
+-> SaleRep: createSaleAnnouncement()
+
+activate SaleRep
+group createSaleAnnouncement
+            SaleRep -> Sale** : SaleAnnouncement(todayDate)
+
+alt type = apartment
+autonumber 22.1
+                    SaleRep -> Sale : fillSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces,owner,\n photographs)
+                    activate Sale
+                    else type = house
+                    SaleRep -> Sale : fillSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice, numBedrooms,numBathrooms,\nnumParkingSpaces, basement,\ninhabitableLoft, sunExposure,\n owner,photographs)
+                    else type = land
+                    SaleRep -> Sale : fillSaleAnnouncement(district,state,\ncity,street,zip-code,propertyType,\ntransactionType, area, cityCenter, \nprice,owner,photographs)
+                    end alt
+end
+
+
+
+@enduml

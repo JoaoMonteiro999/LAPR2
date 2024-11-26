@@ -1,0 +1,70 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":OrdersUI" as UI
+participant ":OrdersController" as CTRL
+participant "ordersRepository:\nOrdersRepository" as ordersRepository
+participant "advertisementRepository:\nAdvertisementRepository" as advertisementRepository
+
+
+autonumber 3
+
+-> UI : selects the order and accepts or rejects it
+    activate UI
+
+autonumber 3.1
+activate CTRL
+    group Manage Orders
+
+          alt accept
+
+                      UI -> CTRL : acceptOrder()
+                      activate CTRL
+
+                          CTRL -> ordersRepository : acceptOrder()
+                          activate ordersRepository
+
+                              ordersRepository -> ordersRepository : rejectOthers()
+
+                              ordersRepository -> ordersRepository : sendAcceptEmailToClient()
+
+                              ordersRepository -> advertisementRepository : deletePropertyAdvertisement()
+                              activate advertisementRepository
+
+                              advertisementRepository -> ordersRepository : success
+                              deactivate advertisementRepository
+
+                              ordersRepository -> CTRL : Order
+                              deactivate ordersRepository
+
+                              CTRL -> UI : Order
+                              deactivate CTRL
+
+                      else reject
+
+                      UI -> CTRL : rejectOrder()
+                                  activate CTRL
+
+                          CTRL -> ordersRepository : rejectOrder()
+                          activate ordersRepository
+
+                              ordersRepository -> ordersRepository : sendRejectEmailToClient()
+
+                              ordersRepository -> CTRL : Order
+                              deactivate ordersRepository
+
+                              CTRL -> UI : Order
+                              deactivate CTRL
+
+                      end alt
+
+    end group
+    autonumber4
+    <-- UI : shows operation success
+        deactivate UI
+deactivate CTRL
+
+
+@enduml

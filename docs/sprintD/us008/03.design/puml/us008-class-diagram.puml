@@ -1,0 +1,146 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+'left to right direction
+
+
+
+
+
+class ListRequestUI{
+
+}
+class Repositories {
++getInstance()
+}
+
+class ListRequestController {
+    +getRequest(requestNum,list)
+
+
+
+}
+class repositories:Repositories {
++getRequestRepository()
++getSaleAnnouncementRepository()
+}
+
+
+
+class PublishSaleAnnouncementController{
++create(property,commission)
+}
+
+
+class SaleAnnouncementRepository{
+-List<SaleAnnouncement> saleAnnouncements
++create(property,commission)
+}
+
+
+
+class Commission{
+    -boolean typeOfCommission
+    -double commissionValue
+    +create(commissiontype,commissionValue)
+}
+
+class Request{
+    -String date
+    +Request(todayDate)
+    +getProperty()
+
+
+}
+class SaleAnnouncement{
+    -String announcementDate
+
+}
+
+class RequestsRepository{
+    -List<Request> requests
+    +Collections.sort()
+    +getRequestList()
+    +DeleteRequest(request)
+    -getList()
+    -list.remove(request)
+
+
+
+}
+
+class Property{
+-int area
+-int cityCenter
+-int price
++Property()
+
+}
+
+class Dwelling{
+-int numBedrooms
+-int numBathrooms
+-int numParkingSpaces
+}
+
+class House{
+-boolean basement
+-boolean inhabitableLoft
+-int sunExposure
+}
+
+
+class PropertyType{
+-int propertyType
+}
+
+class Address{
+-int district
+-int state
+-int city
+-int street
+-int zip-code
++Address(district,state,\ncity,street,zip-code)
+}
+
+class Photograph{
+-String photographs
++Photograph(photographs)
+}
+
+class Equipment{
+-int numEquipments
+-List<String> Equipments
+
+}
+
+ListRequestUI .> ListRequestController
+ListRequestController ..> "*" Request : Request
+ListRequestController ..> "1" RequestsRepository : RequestsRepository
+RequestsRepository ..> "*" Request : creates
+ListRequestController ..> "*" Property : Property
+Request ..> "1"Property : refers to
+Request ..> "1" SaleAnnouncement : can turn to
+
+SaleAnnouncement ..> "1"Commission : has a
+SaleAnnouncement ..> "1"Property : refers to
+
+Property ..> "1" PropertyType : has a
+Property ..> "1" Address : located at
+Property ..> "1..*" Photograph : has
+Property ..> "1" Dwelling : can be
+Dwelling ..> "*" Equipment : can have
+Dwelling ..> "1" House : can be
+
+ListRequestController ..> PublishSaleAnnouncementController : has access
+PublishSaleAnnouncementController ..> SaleAnnouncementRepository : SaleAnnouncementRepository
+SaleAnnouncementRepository ..> SaleAnnouncement :creates
+
+ListRequestController ..> Repositories : repositories
+
+@enduml

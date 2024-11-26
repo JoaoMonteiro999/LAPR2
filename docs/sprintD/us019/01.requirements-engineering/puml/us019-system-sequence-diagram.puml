@@ -1,0 +1,29 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Store Network Manager" as SNM
+participant ":System" as System
+
+activate SNM
+
+    SNM -> System : asks to divide the set of stores
+    activate System
+
+        System --> SNM : requests the number of agencies to divide
+    deactivate System
+
+    SNM -> System : types the number of agencies to divide
+    activate System
+
+        System --> SNM : shows the sublists and their sums difference
+    deactivate System
+deactivate SNM
+
+
+@enduml

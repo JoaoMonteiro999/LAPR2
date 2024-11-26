@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant  ":BookingRequestMapper" as Mapper
+participant "VisitScheduleRequestListDTO: List<visitScheduleRequestDTO>" as ALDTO
+participant "visitScheduleRequestDTO\n:visitScheduleRequestDTO" as DTO
+
+
+'hide footbox
+
+
+->Mapper: toDTO(visitScheduleRequestList)
+        activate Mapper
+        Mapper-->ALDTO** : create()
+            loop for VisitScheduleRequest visitScheduleRequest: visitScheduleRequestList
+                alt visitScheduleRequest.getDate()==startDate || visitScheduleRequest.getDate()==endDate)
+                    Mapper->Mapper : visitScheduleRequestDTO = toDTO(visitScheduleRequest)
+                    activate Mapper
+                    Mapper->DTO** : create(visitScheduleRequestDTO)
+                    deactivate Mapper
+                    Mapper->ALDTO: add(visitScheduleRequestDTO)
+                    activate ALDTO
+                    deactivate
+                end
+            end
+            <-- Mapper : visitScheduleRequestListDTO
+            deactivate Mapper
+
+@enduml

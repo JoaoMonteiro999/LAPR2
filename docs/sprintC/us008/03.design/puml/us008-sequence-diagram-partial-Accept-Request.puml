@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+participant ":ListRequestController" as CTRL
+participant "SaleAnnouncementController" as SaleAnnounCTRL
+participant "SaleAnnouncementRepository" as SaleRep
+participant "SaleAnnouncement" as Sale
+
+
+
+-> CTRL :AcceptRequest(request,commission)
+                    activate CTRL
+                    CTRL -> CTRL : getProperty()
+                    CTRL -> SaleAnnounCTRL** : create
+                    CTRL -> SaleAnnounCTRL : createSaleAnnouncement(property,commission)
+                    activate SaleAnnounCTRL
+                    SaleAnnounCTRL -> SaleRep** : create
+                    SaleAnnounCTRL -> SaleRep : createSaleAnnouncement(property,commission)
+                    activate SaleRep
+                    SaleRep  -> Sale** :create
+                    SaleRep --> SaleAnnounCTRL : saleAnnouncement
+                    deactivate
+                    SaleAnnounCTRL --> CTRL : saleAnnouncement
+                    deactivate
+-->CTRL : saleAnnouncement
+                    deactivate
+
+@enduml

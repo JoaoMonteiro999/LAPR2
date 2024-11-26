@@ -1,0 +1,97 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregistered User" as U_User
+participant ":RegisterClientUI" as UI
+participant ":RegisterClientController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as Repositories
+participant "clientRepository:\nClientRepository" as ClientRepository
+participant ":Client" as Client
+
+activate U_User
+
+        U_User -> UI : asks to be registered in the system
+
+        activate UI
+
+            UI -> CTRL** : create
+            activate CTRL
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> Repositories : getClientRepository()
+                activate Repositories
+
+                Repositories --> CTRL : clientRepository
+                deactivate Repositories
+
+            deactivate CTRL
+
+            UI --> U_User : requests the required data to register
+        deactivate UI
+
+        U_User -> UI : types requested data (name, passport card number, tax number, email address, phone number, address, password)
+        activate UI
+
+            UI --> U_User : shows the requested data
+        deactivate UI
+
+        U_User -> UI : submits data
+        activate UI
+
+            UI -> CTRL : registerClient(name, citizenCardNumber,\n taxNumber, emailAddress, phoneNumber, password)
+            activate CTRL
+
+                CTRL -> ClientRepository : registerClient(name, citizenCardNumber,\n taxNumber, emailAddress, phoneNumber, password)
+            activate ClientRepository
+
+                ClientRepository -> Client** : registerClient(name, citizenCardNumber,\n taxNumber, emailAddress, phoneNumber, password)
+                ClientRepository -> ClientRepository : addClient(client)
+
+                activate ClientRepository
+
+                    ClientRepository -> ClientRepository : validateClient(client)
+                    activate ClientRepository
+
+                        ClientRepository --> ClientRepository
+                    deactivate ClientRepository
+
+                    ClientRepository --> ClientRepository
+                deactivate ClientRepository
+
+                ClientRepository --> CTRL : client
+            deactivate ClientRepository
+
+            CTRL --> UI : client
+            deactivate CTRL
+
+            UI -> CTRL : sendEmail(client)
+        activate CTRL
+
+
+        CTRL -> Client : sendEmail(client)
+        activate Client
+
+        Client -> Client : sendEmail()
+
+        deactivate Client
+        CTRL --> UI
+        deactivate CTRL
+
+        UI-->U_User : shows operation success
+        deactivate UI
+
+
+deactivate U_User
+
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as user
+participant ":System" as System
+
+activate user
+
+    user -> System : asks to display orders made to his properties
+    activate System
+
+        System --> user : shows the list of properties his responsible for and asks to selet one
+    deactivate System
+
+    user -> System : selects the property to see the orders available
+    activate System
+
+        System --> user : show a list of orders made to the chosen property
+    deactivate System
+
+    user -> System : selects the order and accepts or rejects it
+    activate System
+
+        System --> user : shows operation success
+    deactivate System
+
+
+@enduml

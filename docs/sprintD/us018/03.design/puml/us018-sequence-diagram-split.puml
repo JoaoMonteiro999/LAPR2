@@ -1,0 +1,104 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Store Manager" as SM
+participant ":AnalyseDealsUI" as UI
+participant ":AnalyseDealsController" as CTRL
+participant ":DealAnalysis" as D_A
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "orderRepository:\nOrderRepository" as OrderRepository
+participant "regressionModel:\nRegressionModel" as RegressionModel
+participant ":RegressionModelMapper" as Mapper
+participant ":RegressionModelDto" as DTO
+
+
+
+activate SM
+
+    SM -> UI : asks to analyse the deals made
+    activate UI
+
+        UI -> CTRL** : create
+        UI --> SM : shows the different regression models and asks to select one
+    deactivate UI
+
+    SM -> UI : selects a regression model
+    activate UI
+
+        alt if it is simple linear regression
+
+            UI --> SM : shows regression parameters and asks to select one
+            deactivate UI
+
+            SM -> UI : selects the regression parameter
+            activate UI
+
+        end
+
+                UI --> SM: asks the significance value to consider
+            deactivate UI
+
+            SM -> UI : enters the significance value
+            activate UI
+
+                UI -> CTRL : getAnalysisStatistics(chosenRegressionModel, chosenRegressionParameter)
+                activate CTRL
+
+                    CTRL -> D_A : getRegressionParameters(chosenRegressionParameter)
+                    activate D_A
+
+                        ref over D_A
+                            Get Regression Parameters
+                        end ref
+
+                        D_A --> CTRL : regressionParameters
+                    deactivate D_A
+
+                    |||
+
+                    CTRL -> D_A : getRegressionModel(regressionParameters, significanceValue, isRegressionSLM)
+                    activate D_A
+
+                        ref over D_A
+                            Get Regression Model
+                        end ref
+
+                        D_A --> CTRL : regressionModel
+                    deactivate D_A
+
+                    |||
+
+                    CTRL -> RegressionModel : generateAnalysisReport()
+                    activate RegressionModel
+
+                        RegressionModel --> CTRL : analysisReport
+
+                        note right
+                            The analysis report will be different
+                            depending on the regression model
+                            (Simple Linear or Multiple Linear)
+                        end note
+
+                    deactivate RegressionModel
+
+                    CTRL -> Mapper : toDTO(regressionModel, analysisReport)
+                    activate Mapper
+
+                        Mapper -> DTO** : create(regressionModel, analysisReport)
+                        Mapper --> CTRL : regressionModelDto
+                    deactivate Mapper
+
+                    CTRL --> UI : regressionModelDto
+                deactivate CTRL
+
+                UI --> SM : shows selected regression model and all the required statistics
+        deactivate UI
+deactivate SM
+
+@enduml

@@ -1,0 +1,149 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+'skinparam linetype ortho
+'left to right direction
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+'title Domain Model
+
+'class Platform {
+'  -description
+'}
+
+class Company
+
+class Store{
+    designation
+    emailAddress
+    phoneNumber
+}
+
+class Administrator
+
+class Agent
+
+class StoreManager
+
+class StoreNetworkManager
+
+class Client
+
+class Owner{
+    cardNumber
+    taxNumber
+    emailAddress
+    phoneNumber
+}
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class Apartment
+
+class Apartment_House{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class Land
+
+class Network
+
+class Equipment
+
+class Property{
+    area
+    cityCenterDistance
+    price
+    photograph
+}
+
+class Employee{
+    name
+    cardNumber
+    taxNumber
+    emailAddress
+    phoneNumber
+}
+
+class OrganizationRole{
+    nameEmployee
+}
+
+class Offer{
+    publicationDate
+    price
+    propertyDescription
+}
+
+class UnregisteredUser
+
+class Visit{
+    visitDate
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class PropertyType
+
+Address "1" -- "1" Employee : located at <
+Address "1" -- "1" Owner : located at <
+Address "1" -- "1" Store : located at <
+
+Company "1" -- "1" Network : owns >
+
+Network "1" -- "1..*" Store : contains >
+Network "1" -- "1" StoreNetworkManager : manages <
+
+Store "1" -- "1" StoreManager : manages <
+Store "1" -- "1..*" Employee : owns >
+
+OrganizationRole <|-- Administrator
+OrganizationRole <|-- Agent
+OrganizationRole <|-- StoreManager
+OrganizationRole <|-- StoreNetworkManager
+
+OrganizationRole "1..*" -- "1" Employee : plays <
+
+Administrator "1" -- "1..*" Employee : registers >
+Administrator "1" -- "1..*" Store : registers >
+
+Client "1" -- "1..*" Property : buys/rents >
+Client "1" -- "1..*" Visit : requests >
+
+Owner "1" -- "1..*" Offer : makes >
+
+Offer "1" -- "1" Property : contains >
+
+Property "1..*" -- "1" UnregisteredUser : displays <
+Property "1" -- "1" Address : located at >
+
+Apartment_House "1" -- "1..*" Equipment : has >
+Apartment_House <|-- Apartment
+Apartment_House <|-- House
+
+Agent "1" -- "1..*" Offer : reviews >
+Agent "1" -- "1..*" Offer : publishes >
+Agent "1" -- "1..*" Visit : schedules >
+
+Visit "1" -- "1" Address : located at >
+
+PropertyType "1" -- "1" Property : categorized by <
+PropertyType <|-- Apartment_House
+PropertyType <|-- Land
+
+@enduml

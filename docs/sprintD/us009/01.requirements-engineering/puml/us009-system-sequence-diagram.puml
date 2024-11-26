@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client --> System : Ask to send a message scheduling a visit
+    activate System
+    System --> Client : Show a list of properties sorted \n from the most recent entries to the oldest
+    deactivate System
+
+    Client --> System : choose the property
+    activate System
+    System --> Client : Ask the date and hour for the visit
+    deactivate System
+
+    Client --> System : Select the requested date and hour
+     activate System
+
+    System --> Client : Send the message to the agent and show a \n confirmation message to the client
+    deactivate System
+
+
+@enduml

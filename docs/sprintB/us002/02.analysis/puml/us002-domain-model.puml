@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US2
+
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+
+class Offer {
+    publicationDate
+    price
+}
+
+
+class Agent {
+
+
+}
+
+class Owner {
+    name
+    cardNumber
+    taxNumber
+    email
+    phoneNumber
+}
+class Advertisement{
+    AdvertisementDate
+}
+
+class Commission{
+    TypeOfCommission
+    CommissionValue
+}
+
+
+
+Owner "1" --- "1..*" Offer: makes >
+Agent "1" --- "1..*" Offer: publishes  >
+Address "1" -- "1" Owner : located at <
+Agent "1" -- "1..*" Advertisement : reviews >
+Advertisement "1" -- "1" Offer : can be >
+Commission "1" -- "1" Agent : defines <
+
+
+
+
+@enduml

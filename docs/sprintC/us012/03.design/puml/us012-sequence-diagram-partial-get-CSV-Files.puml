@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+participant ":ImportLegacyDataController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "csvFileRepository\n:CSVFileRepository" as CSVFileRepository
+
+
+
+-> CTRL : getCSVFiles()
+    activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getCSVFileRepository()
+        activate PLAT
+
+            PLAT --> CTRL : csvFileRepository
+        deactivate PLAT
+
+        CTRL -> CSVFileRepository : getCSVFiles()
+        activate CSVFileRepository
+
+            CSVFileRepository --> CTRL : csvFileList
+        deactivate CSVFileRepository
+
+<--CTRL : csvFileList
+    deactivate CTRL
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

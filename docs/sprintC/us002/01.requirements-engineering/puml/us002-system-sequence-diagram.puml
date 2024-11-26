@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to register the information about the property
+    activate System
+
+
+    System --> Employee : requests property type and transaction type
+        deactivate System
+
+        Employee -> System : selects property type and transaction type
+        activate System
+
+        alt type = apartment
+
+            System --> Employee : requests the apartment characteristics
+
+        else type = house
+
+            System --> Employee : requests the house characteristics
+
+        else type = land
+
+            System --> Employee : requests the land characteristics
+            deactivate System
+
+        end alt
+
+        System --> Employee : requests the commission
+
+        Employee -> System : fills in the property characteristics and the commission, \npublishing the sale ad
+        activate System
+
+        System --> Employee : shows operation success
+        deactivate System
+
+
+
+@enduml

@@ -1,0 +1,81 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class PlaceOrderUI
+
+class ListPropertiesUI
+
+class PlaceOrderController{
+    + PlaceOrderController(ordersRepository, authenticationRepository)
+    + displayProperties()
+    + checkOrderAmountIsValid(property, orderAmount)
+    + placeOrder(property, orderAmount)
+    + getOrders()
+    - getOrderRepository()
+    - getAuthenticationRepository()
+    - getClientEmailFromSession()
+}
+
+class ApplicationSession{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession{
+    + getUserEmail()
+}
+
+class Order{
+    - Integer orderAmount
+    - String clientEmail
+}
+
+class OrderRepository{
+    + placeOrder(property, orderAmount, clientEmail)
+    + getOrders()
+    + checkOrderAmountIsValid(property, orderAmount)
+    - addOrder(order)
+    - validateOrder(order)
+    - checkClientMadeOrderSameProperty(clientEmail, property)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getOrderRepository()
+}
+
+class Property{
+    - int area
+    - int cityCenter
+    - int price
+}
+
+PlaceOrderUI ..> PlaceOrderController
+
+PlaceOrderController ..> ListPropertiesUI
+PlaceOrderController ..> ApplicationSession
+PlaceOrderController ..> UserSession
+PlaceOrderController ..> Repositories : repositories
+PlaceOrderController ..> OrderRepository : ordersRepository
+
+ApplicationSession --> ApplicationSession : instance
+ApplicationSession --> "1" UserSession : userSession
+
+Repositories --> Repositories : instance
+Repositories --> "1" OrderRepository : ordersRepository
+
+OrderRepository --> "*" Order
+
+Order --> "1" Property : property
+
+
+@enduml

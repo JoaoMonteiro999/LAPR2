@@ -1,0 +1,700 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+actor "Organization Agent" as ADM
+participant ":PublishSaleAnnouncementUI" as UI
+participant ":PublishSaleAnnouncementController" as CTRL
+participant ":Address" as Ad
+participant ":PropertyType" as PropType
+participant ":BusinessType" as BusType
+participant ":Photograph" as Photograph
+participant ":Property" as Property
+participant ":Dwelling" as Dwelling
+participant ":House" as House
+participant ":Commission" as Commission
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "Repository:\nSaleAnnouncementRepository" as SaleRep
+participant ":SaleAnnouncement" as Sale
+participant ":EmployeeRepository" as EmpRep
+
+
+
+activate ADM
+
+        ADM -> UI : asks to publish sale announcement
+        activate UI
+
+        UI -> CTRL** : create()
+
+        UI -> CTRL : asksStreetName()
+                activate CTRL
+                CTRL --> UI: requests Street name
+                deactivate
+
+
+        UI --> ADM : requests Street name
+        deactivate UI
+        ADM -> UI : inserts Street name
+        activate UI
+
+
+
+
+        UI -> CTRL : saveStreetName()
+                activate CTRL
+                CTRL -> CTRL : saveStreetName()
+                CTRL --> UI: Street name
+                deactivate
+
+        UI -> CTRL : asksCityName()
+                activate CTRL
+                CTRL --> UI: requests City name
+                deactivate
+
+        UI --> ADM : requests City name
+        deactivate UI
+        ADM -> UI : inserts City name
+        activate UI
+        UI -> CTRL : saveCityName()
+            activate CTRL
+            CTRL -> CTRL : saveCityName()
+            CTRL --> UI: City name
+            deactivate
+
+        UI -> CTRL : asksDistrictName()
+                activate CTRL
+
+                CTRL --> UI: requests District name
+                deactivate
+
+
+        UI --> ADM : requests District name
+        deactivate UI
+        ADM -> UI : inserts District name
+        activate UI
+        opt
+        UI -> CTRL : saveDistrictName()
+                    activate CTRL
+                    CTRL -> CTRL : saveDistrictName()
+                    CTRL --> UI: District name
+                    deactivate
+        end
+
+        UI -> CTRL : asksStateAcronym()
+                activate CTRL
+
+                CTRL --> UI: requests State Acronym
+                deactivate
+
+
+        UI --> ADM : requests State acronym
+        deactivate UI
+        ADM -> UI : inserts State acronym
+        activate UI
+        UI -> CTRL : saveStateAcronym()
+                    activate CTRL
+                    CTRL -> CTRL : saveStateAcronym()
+                    CTRL --> UI: Sate Acronym
+                    deactivate
+
+        UI -> CTRL : asksZipCode()
+                activate CTRL
+
+                CTRL --> UI: requests Zip-code
+                deactivate
+
+        UI --> ADM : requests Zip-code
+        deactivate UI
+        ADM -> UI : inserts Zip-code
+        activate UI
+        UI -> CTRL : saveZipCode()
+                    activate CTRL
+                    CTRL -> CTRL : saveZipCode()
+                    CTRL --> UI: Zip-code
+                    deactivate
+
+        UI -> CTRL : create()
+                activate CTRL
+                CTRL -> Ad** : create(StreetName,CityName,DistrictName,StateAcronym,Zip-Code)
+                CTRL -> CTRL :saveAddress()
+                CTRL --> UI: Address
+                deactivate
+
+        UI -> CTRL : asksPropertyType()
+                activate CTRL
+
+                CTRL --> UI: requests property Type
+                deactivate
+
+        UI --> ADM : requests property type
+        deactivate UI
+        ADM -> UI : selects property type
+        activate UI
+
+        UI -> CTRL : create()
+                activate CTRL
+                CTRL -> PropType** : create(propertyType)
+                CTRL -> CTRL :savePropertyType()
+                CTRL --> UI: Property Type
+                deactivate
+
+        UI -> CTRL : asksBusinessType
+                activate CTRL
+
+                CTRL --> UI: requests business type
+                deactivate
+
+        UI --> ADM : requests business type
+        deactivate UI
+        ADM -> UI : selects business type
+        activate UI
+
+        UI -> CTRL : create()
+                        activate CTRL
+                        CTRL -> BusType** : create(businessType)
+                        CTRL -> CTRL :saveBusinessType()
+                        CTRL --> UI: Business Type
+                        deactivate
+
+        opt
+        UI -> CTRL : asksContractDuration()
+                activate CTRL
+
+                CTRL --> UI: requests contract duration
+                deactivate
+
+        UI --> ADM : requests contract duration
+        deactivate UI
+        ADM -> UI : inserts contract duration
+        activate UI
+        UI -> CTRL : saveContractDuration()
+                activate CTRL
+                CTRL -> CTRL : saveContractDuration()
+                CTRL --> UI: contractDuration
+
+                deactivate
+        end
+
+
+                UI -> CTRL : asksArea()
+                        activate CTRL
+
+                        CTRL --> UI: requests area
+                        deactivate
+
+
+
+
+        UI --> ADM : requests area
+        deactivate UI
+        ADM -> UI : inserts area
+        activate UI
+        UI -> CTRL : saveArea()
+                activate CTRL
+                CTRL -> CTRL : saveArea()
+                CTRL --> UI: area
+                deactivate
+
+        UI -> CTRL : askDistanceCityCenter()
+                activate CTRL
+                CTRL --> UI: requests distance form city center
+                deactivate
+
+        UI --> ADM : requests distance from city center
+        deactivate UI
+        ADM -> UI : inserts distance from city center
+        activate UI
+
+        UI -> CTRL : saveDistanceCityCenter()
+                activate CTRL
+                CTRL -> CTRL : saveDistanceCityCenter()
+                CTRL --> UI: distanceCityCenter
+                deactivate
+
+
+        UI -> CTRL : price()
+                activate CTRL
+
+                CTRL --> UI: requests property price
+                deactivate
+
+        UI --> ADM : requests property price
+        deactivate UI
+        ADM -> UI : inserts  price
+        activate UI
+
+        UI -> CTRL : saveprice()
+                        activate CTRL
+                        CTRL -> CTRL : saveprice()
+                        CTRL --> UI: price
+                        deactivate
+
+
+
+        UI -> CTRL : asksOwnerEmail()
+        activate CTRL
+        CTRL --> UI : requests owner email
+        deactivate
+
+
+
+
+
+
+        UI --> ADM : requests owner email
+                deactivate UI
+                ADM -> UI : inserts owner email
+                activate UI
+
+        UI -> CTRL : saveOwnerEmail()
+        activate CTRL
+        CTRL -> CTRL : saveOwnerEmail()
+        CTRL --> UI : ownerEmail
+        deactivate
+
+        UI -> CTRL : asksPhotosNumber
+        activate CTRL
+        CTRL --> UI : requests the number of photoLink
+        deactivate
+
+
+
+
+
+
+        UI --> ADM : requests the number of photos
+        deactivate UI
+        ADM -> UI : inserts number of photos
+        activate UI
+        UI -> CTRL : saveNumberOfPhotos()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfPhotos
+                CTRL --> UI: numberOfPhotos
+                deactivate
+
+        loop
+        UI --> ADM : requests the photo link
+        deactivate UI
+        ADM -> UI : inserts photo link
+        activate UI
+        UI -> CTRL : savePhotoLink()
+                activate CTRL
+                CTRL -> CTRL : savePhotoLink()
+                CTRL --> UI: photos
+                deactivate
+                UI -> CTRL : create()
+                        activate CTRL
+                        CTRL -> Photograph** : create(photoLink)
+                        CTRL -> CTRL : savePhotograph()
+                        CTRL --> UI : photos
+                        deactivate
+        end
+
+        UI -> CTRL : create()
+        activate CTRL
+        CTRL -> Property** : create(address,propertyType,area,distanceCityCenter,price,ownerEmail,photos,)
+        CTRL -> CTRL : saveProperty()
+        CTRL --> UI : property
+        deactivate
+
+
+
+
+
+
+
+
+        alt type = apartment
+
+        UI -> CTRL : asksNumberOfBedrooms()
+                activate CTRL
+
+                CTRL --> UI: requests number of bedrooms
+                deactivate
+
+
+        UI --> ADM : requests number of bedrooms
+        deactivate UI
+        ADM -> UI : inserts number of bedrooms
+        activate UI
+        UI -> CTRL : saveNumberOfBedrooms()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfBedrooms()
+                CTRL --> UI: number of bedrooms
+                deactivate
+
+
+        UI -> CTRL : asksNumberOfBathrooms()
+                activate CTRL
+
+                CTRL --> UI: requests number of bathrooms
+                deactivate
+
+        UI --> ADM : requests number of bathrooms
+        deactivate UI
+        ADM -> UI : inserts number of bathrooms
+        opt
+        activate UI
+        UI -> CTRL : saveNumberOfBathrooms()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfBathrooms()
+                CTRL --> UI: number of bathrooms
+                deactivate
+
+        end
+
+        UI -> CTRL : asksNumberOfParkingSpaces()
+                activate CTRL
+
+                CTRL --> UI: requests number of parking spaces
+                deactivate
+
+
+        UI --> ADM : requests number of parking spaces
+        deactivate UI
+        ADM -> UI : inserts number of parking spaces
+        activate UI
+        UI -> CTRL : saveNumberOfParkingSpaces()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfParkingSpaces()
+                CTRL --> UI: number of parking spaces
+                deactivate
+
+
+        UI -> CTRL : asksEquipmentInformation()
+                activate CTRL
+
+                CTRL --> UI: requests equipment information
+                deactivate
+
+        UI --> ADM : requests equipment information
+        deactivate UI
+        ADM -> UI : selects if it has central heating, air conditioning,\n both, none or rather not answer
+        activate UI
+
+        UI -> CTRL : saveEquipmentInformation()
+                activate CTRL
+                CTRL -> CTRL : saveEquipmentInformation()
+                CTRL --> UI: equipmentInformation
+                deactivate
+
+
+
+
+        UI -> CTRL :create()
+        activate CTRL
+        CTRL -> Dwelling** : create(numberOfBedrooms,numberOfBathrooms,numberOfParkingSpaces,equipmentInformation)
+
+        CTRL -> Property : setDwelling(Dwelling)
+        activate Property
+        Property -> Property : setDwelling(Dwelling)
+        Property --> CTRL : Dwelling
+        deactivate
+        CTRL -> CTRL : saveDwelling()
+        CTRL --> UI : Dwelling
+
+
+        deactivate
+
+
+
+
+        else type = house
+
+
+
+        UI -> CTRL : asksNumberOfBedrooms()
+                activate CTRL
+
+                CTRL --> UI: requests number of bedrooms
+                deactivate
+
+
+        UI --> ADM : requests number of bedrooms
+        deactivate UI
+        ADM -> UI : inserts number of bedrooms
+        activate UI
+        UI -> CTRL : saveNumberOfBedrooms()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfBedrooms()
+                CTRL --> UI: number of bedrooms
+                deactivate
+
+
+        UI -> CTRL : asksNumberOfBathrooms()
+                activate CTRL
+
+                CTRL --> UI: requests number of bathrooms
+                deactivate
+
+        UI --> ADM : requests number of bathrooms
+        deactivate UI
+        ADM -> UI : inserts number of bathrooms
+        opt
+        activate UI
+        UI -> CTRL : saveNumberOfBathrooms()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfBathrooms()
+                CTRL --> UI: number of bathrooms
+                deactivate
+
+        end
+
+        UI -> CTRL : asksNumberOfParkingSpaces()
+                activate CTRL
+
+                CTRL --> UI: requests number of parking spaces
+                deactivate
+
+
+        UI --> ADM : requests number of parking spaces
+        deactivate UI
+        ADM -> UI : inserts number of parking spaces
+        activate UI
+        UI -> CTRL : saveNumberOfParkingSpaces()
+                activate CTRL
+                CTRL -> CTRL : saveNumberOfParkingSpaces()
+                CTRL --> UI: number of parking spaces
+                deactivate
+
+
+        UI -> CTRL : asksEquipmentInformation()
+                activate CTRL
+
+                CTRL --> UI: requests equipment information
+                deactivate
+
+        UI --> ADM : requests equipment information
+        deactivate UI
+        ADM -> UI : selects if it has central heating, air conditioning,\n both, none or rather not answer
+        activate UI
+
+        UI -> CTRL : saveEquipmentInformation()
+                activate CTRL
+                CTRL -> CTRL : saveEquipmentInformation()
+                CTRL --> UI: equipmentInformation
+                deactivate
+
+
+
+
+
+
+
+
+
+       UI -> CTRL :create()
+               activate CTRL
+               CTRL -> Dwelling** : create(numberOfBedrooms,numberOfBathrooms,numberOfParkingSpaces,equipments)
+
+               CTRL -> Property : setDwelling(Dwelling)
+               activate Property
+               Property -> Property : setDwelling(Dwelling)
+               Property --> CTRL : Dwelling
+               deactivate
+                       CTRL -> CTRL : saveDwelling()
+
+               CTRL --> UI : Dwelling
+
+
+               deactivate
+
+
+
+        UI -> CTRL : asksBasement()
+        activate CTRL
+        CTRL -> UI : requests information about the basement
+        deactivate
+
+
+        UI --> ADM : requests information about the basement
+        deactivate UI
+        ADM -> UI : selects if it has a basement
+        activate UI
+        UI -> CTRL : savesBasementInformation()
+                activate CTRL
+                CTRL -> CTRL : savesBasementInformation()
+                CTRL --> UI: basementInformation
+                deactivate
+
+        UI -> CTRL : asksInhabitableLoftInformation()
+        activate CTRL
+        CTRL --> UI : requests information about the inhabitable loft
+        deactivate
+
+
+        UI --> ADM : requests information about the inhabitable loft
+        deactivate UI
+        ADM -> UI : selects if it has a inhabitable loft
+        activate UI
+        UI -> CTRL : savesInhabitableLoftInformation()
+                activate CTRL
+                CTRL -> CTRL : savesInhabitableLoftInformation()
+                CTRL --> UI: inhabitableLoftInformation
+                deactivate
+
+
+
+
+        UI -> CTRL : asksSunExposure()
+        activate CTRL
+        CTRL --> UI : requests the side exposed to the sun
+        deactivate
+
+        UI --> ADM : requests the side exposed to the sun
+        deactivate UI
+        opt
+        ADM -> UI : selects the side exposed to the sun
+        activate UI
+        UI -> CTRL : savesSunExposure()
+                        activate CTRL
+                        CTRL -> CTRL : savesSunExposure()
+                        CTRL --> UI: sunExposure
+                        deactivate
+        end
+        UI -> CTRL :create()
+        activate CTRL
+        CTRL -> House** :create(basementInformation,inhabitableLoftInformation,sunExposure)
+        CTRL -> Dwelling :setHouse(house)
+        activate Dwelling
+        Dwelling -> Dwelling : setHouse(house)
+        Dwelling --> CTRL : house
+        deactivate
+        CTRL -> CTRL : saveHouse()
+
+        CTRL --> UI : house
+        deactivate
+
+        else type = land
+
+        end alt
+
+        UI -> CTRL : askTypeOfCommission()
+                activate CTRL
+
+                CTRL --> UI: requests type of commission
+                deactivate
+
+
+        UI --> ADM : requests the type of commission
+        deactivate UI
+        ADM -> UI : selects the type of commission
+        activate UI
+        UI -> CTRL : savesCommissionType()
+                activate CTRL
+                CTRL -> CTRL : savesCommissionType()
+                CTRL --> UI: commissionType
+                deactivate
+
+
+        UI -> CTRL : askCommissionValue()
+        activate CTRL
+        CTRL --> UI : requests the commission value
+        deactivate
+
+        UI --> ADM : requests the commission value
+        deactivate UI
+        ADM -> UI : inserts the commission value
+        activate UI
+        UI -> CTRL : savesCommissionValue()
+                activate CTRL
+                CTRL -> CTRL : savesCommissionValue()
+                CTRL --> UI: commissionValue
+                deactivate
+
+                UI -> CTRL :create()
+                activate CTRL
+                CTRL -> Commission** : create(commissionType,commissionValue)
+                CTRL -> CTRL : saveCommission()
+                CTRL --> UI : commission
+                deactivate
+
+
+                UI -> CTRL : createSaleAnnouncement()
+                activate CTRL
+                CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+                            RepositorySingleton -> RepositorySingleton :getInstance()
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getSaleAnnouncementsRepository()
+                        activate PLAT
+                            PLAT -> PLAT : getSaleAnnouncementsRepository()
+                            PLAT --> CTRL : saleAnnouncementRepository
+                        deactivate PLAT
+
+                        CTRL -> SaleRep : createSaleAnnouncement()
+                        activate SaleRep
+
+
+                        ref over SaleRep
+                        Create Sale Announcement
+                        end
+
+
+                        SaleRep --> CTRL : saleAnnouncement
+                        deactivate
+                        CTRL --> UI : saleAnnouncement
+                        deactivate
+
+                        UI -> CTRL : sendSms()
+                        activate CTRL
+
+
+
+
+
+                        CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+                                RepositorySingleton -> RepositorySingleton : getInstance()
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getEmployeeRepository()
+                            activate PLAT
+                                PLAT -> PLAT : getEmployeeRepository()
+                                PLAT --> CTRL : EmployeeRepository
+                            deactivate PLAT
+
+                            CTRL -> EmpRep : getAgentName()
+                            activate EmpRep
+                            EmpRep -> EmpRep : getAgentName()
+                            EmpRep --> CTRL : agentName
+                            deactivate
+                            CTRL -> EmpRep : getAgentPhoneNumber()
+                            activate EmpRep
+                            EmpRep -> EmpRep : getAgentPhoneNumber()
+                            EmpRep --> CTRL : agentPhoneNumber
+                            deactivate
+
+
+
+
+
+
+                        CTRL -> CTRL : sendSms(ownerEmail,address,\nagentName,agentPhoneNumber)
+
+
+
+                        CTRL --> UI : sms
+                        deactivate
+
+
+
+                        UI --> ADM : confirmation that the add has been created \n and that the sms has been sent
+
+        deactivate UI
+
+
+
+
+
+
+@enduml

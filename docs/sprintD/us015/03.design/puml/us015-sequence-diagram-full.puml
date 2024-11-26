@@ -1,0 +1,156 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as Agent
+participant ":ListBookingRequestsUI" as UI
+participant ":ListBookingRequestsController" as CTRL
+participant ":Repositories" as repositories
+participant "repositories\n:Repositories" as PLAT
+participant "authenticationRepository\n:AuthenticationRepository" as authenticationRepository
+participant "VisitScheduleRequestRepository" as visitsRepository
+participant "BubbleSort" as BubbleSort
+participant "TreeSort" as TreeSort
+participant  ":BookingRequestMapper" as Mapper
+participant "VisitScheduleRequestListDTO: List<visitScheduleRequestDTO>" as ALDTO
+participant "visitScheduleRequestDTO\n:visitScheduleRequestDTO" as DTO
+
+
+activate Agent
+
+    Agent -> UI : asks to see booking requests list
+    activate UI
+
+
+
+
+
+
+
+
+        UI --> Agent : requests the beginning date
+    deactivate UI
+
+    Agent -> UI : insert the beginning date
+    activate UI
+
+
+
+
+        UI --> Agent : requests ending date
+    deactivate UI
+
+
+    Agent -> UI : selects ending date
+    activate UI
+
+
+
+UI --> CTRL** : create()
+
+            UI -> CTRL : getAgentLoggedIn()
+            activate CTRL
+
+            CTRL -> repositories : getInstance()
+            activate repositories
+
+            repositories --> CTRL : repositories
+            deactivate repositories
+
+            CTRL -> PLAT : getAuthenticationRepository()
+            activate PLAT
+
+            PLAT --> CTRL : authenticationRepository
+            deactivate PLAT
+
+            CTRL -> authenticationRepository : getAgentLoggedIn()
+            activate authenticationRepository
+
+            authenticationRepository --> CTRL : agentLoggedIn
+            deactivate authenticationRepository
+
+            CTRL --> UI : agentLoggedIn
+            deactivate CTRL
+
+        UI->CTRL : getBookingListSorted(Agent agentLoggedIn,\n Date startDate, Date endDate)
+        activate CTRL
+                CTRL->repositories: getInstance()
+            activate repositories
+                repositories-->CTRL: repositories
+            deactivate repositories
+                CTRL->PLAT: VisitScheduleRequestRepository()
+            activate PLAT
+                PLAT-->CTRL: visitScheduleRequestRepository
+            deactivate PLAT
+                CTRL -> visitsRepository: getVisitScheduleRequestListByAgent(Agent agentLoggedIn,Date startDate,Date endDate)
+        activate visitsRepository
+            visitsRepository -> visitsRepository : getListByDate(Date startDate,Date endDate)
+            activate visitsRepository
+            deactivate
+            visitsRepository -> visitsRepository : filterListByAgent(Agent agentLoggedIn)
+            activate visitsRepository
+                        deactivate
+            visitsRepository -> visitsRepository : sortByConfigurationFile()
+            activate visitsRepository
+            visitsRepository -> visitsRepository : getSortingMethod()
+            activate visitsRepository
+            visitsRepository --> visitsRepository : sortingMethod
+            deactivate
+            alt sortMethod = bubble
+            visitsRepository -> BubbleSort : sort(visitScheduleRequestList)
+            activate BubbleSort
+            BubbleSort --> visitsRepository : visitScheduleRequestListSorted
+            deactivate
+
+            else sortMethod = tree
+            visitsRepository -> TreeSort : sort(visitScheduleRequestList)
+                        activate TreeSort
+                        TreeSort --> visitsRepository : visitScheduleRequestListSorted
+                        deactivate
+                        end
+                                                visitsRepository --> visitsRepository: visitScheduleRequestList
+
+
+
+                        deactivate
+
+            visitsRepository-->CTRL: visitScheduleRequestList
+            deactivate visitsRepository
+
+        CTRL->Mapper: toDTO(visitScheduleRequestList)
+        activate Mapper
+        Mapper-->ALDTO** : create()
+            loop for VisitScheduleRequest visitScheduleRequest: visitScheduleRequestList
+                alt visitScheduleRequest.getDate()==startDate || visitScheduleRequest.getDate()==endDate)
+                    Mapper->Mapper : visitScheduleRequestDTO = toDTO(visitScheduleRequest)
+                    activate Mapper
+                    Mapper->DTO** : create(visitScheduleRequestDTO)
+                    deactivate Mapper
+                    Mapper->ALDTO: add(visitScheduleRequestDTO)
+                    activate ALDTO
+                    deactivate
+                end
+            end
+            Mapper --> CTRL : visitScheduleRequestListDTO
+            deactivate Mapper
+
+
+            deactivate PLAT
+
+                CTRL --> UI : visitScheduleRequestListDTO
+            deactivate CTRL
+
+
+
+
+
+        UI --> Agent : shows booking list
+    deactivate UI
+
+
+
+@enduml

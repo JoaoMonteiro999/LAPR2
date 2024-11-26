@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Client" as client
+participant ":System" as System
+
+activate client
+
+    client -> System : asks to place an order to purchase property
+    activate System
+
+        System --> client : displays available properties
+    deactivate System
+
+    client -> System : selects  property
+    activate System
+
+        System --> client : requests data (order amount)
+    deactivate System
+
+    loop until orderAmount is "equal" or "lower"
+
+        client -> System : types requested data
+        activate System
+
+    end
+
+        System --> client : shows requested data
+    deactivate System
+
+    client -> System : submits data
+    activate System
+
+        alt orderAmount is "equal"
+            System --> client : shows message and shows operation success
+
+        else orderAmount is "lower"
+            System --> client : shows operation success
+        end
+
+    deactivate System
+
+@enduml

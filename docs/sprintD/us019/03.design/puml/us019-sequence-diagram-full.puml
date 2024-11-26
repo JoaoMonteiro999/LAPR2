@@ -1,0 +1,159 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Store Network Manager" as SNM
+participant ":DivideAgenciesUI" as UI
+participant ":DivideAgenciesController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "agencyRepository:\nAgencyRepository" as AgencyRepository
+participant ":DivideAgenciesAlgorithm" as DivideAgenciesAlgorithm
+participant ":SublistsAndSumDifference" as SublistsAndSumDifference
+
+
+
+activate SNM
+
+    SNM -> UI : asks to divide the set of agencies
+    activate UI
+
+        UI -> CTRL** : create()
+        UI -> CTRL : getAgencies()
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL : repositories
+            deactivate RepositorySingleton
+
+
+            CTRL -> PLAT : getAgencyRepository()
+            activate PLAT
+
+                PLAT --> CTRL : agencyRepository
+            deactivate PLAT
+
+            CTRL -> AgencyRepository : getAgencies()
+            activate AgencyRepository
+
+                AgencyRepository --> CTRL : agencyList
+            deactivate AgencyRepository
+
+            CTRL --> UI : agencyList
+        deactivate CTRL
+
+        UI --> SNM : requests the number of agencies to divide
+    deactivate UI
+
+    SNM -> UI : types the number of agencies to divide
+    activate UI
+
+        UI -> CTRL : getPartitionSublist(agencyList, numAgenciesToDivide)
+        activate CTRL
+
+            loop for every agency it adds the number of properties
+
+                CTRL -> AgencyRepository : getPartitionSublist(agencyList, numAgenciesToDivide)
+                activate AgencyRepository
+
+                    AgencyRepository --> CTRL : partitionSublist
+                deactivate AgencyRepository
+
+            end
+
+            CTRL --> UI : partitionSublist
+        deactivate CTRL
+
+        |||
+
+        UI -> CTRL : divideSetOfAgencies(partitionSublist)
+        activate CTRL
+
+            loop for every agency to get its number of properties
+
+                CTRL -> AgencyRepository : getNumberPropertiesPerAgency(partitionSublist)
+                activate AgencyRepository
+
+                    AgencyRepository --> CTRL : numPropertiesInAgenciesList
+                deactivate AgencyRepository
+
+            end
+
+            |||
+
+            CTRL -> DivideAgenciesAlgorithm : divideSetOfAgencies(numPropertiesInAgenciesList)
+            activate DivideAgenciesAlgorithm
+
+                loop until it reaches the number of partitions
+
+                    DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : calculateDifferenceOfTheSum(numPropertiesInAgenciesList, binaryString, n, oneList, zeroList)
+                    activate DivideAgenciesAlgorithm
+
+                        DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : createSublists(numPropertiesInAgenciesList, binaryString, zeroList, oneList, n)
+                        activate DivideAgenciesAlgorithm
+
+                        |||
+
+                            DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : sublistsSum(zeroList)
+                            activate DivideAgenciesAlgorithm
+
+                                DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : zeroListSum
+                            deactivate DivideAgenciesAlgorithm
+
+                            |||
+
+                            DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : sublistsSum(oneList)
+                            activate DivideAgenciesAlgorithm
+
+                                DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : oneListSum
+                            deactivate DivideAgenciesAlgorithm
+
+                        |||
+
+                        DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : sumDifference
+                    deactivate DivideAgenciesAlgorithm
+
+                    |||
+
+                    DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : verifyIfDifferenceIsMin(sumDifference)
+                    activate DivideAgenciesAlgorithm
+
+                        DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : differenceArray
+
+                    deactivate DivideAgenciesAlgorithm
+
+                end
+
+                |||
+
+                DivideAgenciesAlgorithm -> DivideAgenciesAlgorithm : calculateDifferenceOfTheSum(numPropertiesInAgenciesList, minDifferenceBinary, n, zeroList, oneList)
+                activate DivideAgenciesAlgorithm
+
+                    DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : minDifference
+                deactivate DivideAgenciesAlgorithm
+
+                |||
+
+                DivideAgenciesAlgorithm -> SublistsAndSumDifference** : create(numPropertiesInAgenciesList, oneList, zeroList, minDifference)
+                DivideAgenciesAlgorithm --> DivideAgenciesAlgorithm : sublistsAndSumDifference
+            deactivate DivideAgenciesAlgorithm
+
+            DivideAgenciesAlgorithm --> CTRL : sublistsAndSumDifference
+        deactivate DivideAgenciesAlgorithm
+
+
+        CTRL --> UI : sublistsAndSumDifference
+        deactivate CTRL
+
+        UI --> SNM : shows the sublists and the difference between the sums
+    deactivate UI
+
+deactivate SNM
+
+@enduml

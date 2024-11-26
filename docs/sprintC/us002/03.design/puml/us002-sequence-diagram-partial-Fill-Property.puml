@@ -1,0 +1,29 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":Property" as Property
+
+-> Property : fillProperty()
+activate Property
+group fillProperty
+Property -> PropertyType** : PropertyType(propertyType)
+
+            alt type = apartment
+            Property -> Dwelling** : Dwelling(numBedrooms,numBathrooms,\nnumParkingSpaces)
+            else type = house
+            Property -> Dwelling** : Dwelling(numBedrooms,numBathrooms,\nnumParkingSpaces,basement,\ninhabitableLoft,sunExposure)
+            Property ->Dwelling : House()
+            activate Dwelling
+            Dwelling -> House** : House(basement,inhabitableLoft,\nsunExposure)
+            deactivate Dwelling
+            else type = land
+            end alt
+
+            Property -> Address** : Address(district,state,\ncity,street,zip-code)
+            Property -> Photograph** : Photograph(photographs)
+end
+        <-- Property :show operation success
+
+@enduml

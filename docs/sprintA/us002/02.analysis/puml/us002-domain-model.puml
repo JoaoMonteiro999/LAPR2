@@ -1,0 +1,53 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US2
+
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+
+class Offer {
+    date
+    price
+    propertyDescription
+}
+
+
+class Agent {
+
+
+}
+
+class Owner {
+    cardNumber
+    taxNumber
+    email
+    phoneNumber
+}
+
+
+
+
+Owner "1" --- "1..*" Offer: makes >
+Agent "1" --- "1.*" Offer: publishes  >
+Agent "1" --- "1.*" Offer: reviews  >
+Address "1" -- "1" Owner : located at <
+
+
+@enduml

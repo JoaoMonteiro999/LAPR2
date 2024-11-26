@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":Property" as Property
+
+-> Property : createProperty()
+activate Property
+group createProperty
+Property -> PropertyType** : PropertyType(propertyType)
+
+            alt type = apartment
+                            Property -> Dwelling** : createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces)
+
+                            else type = house
+
+                            Property -> Dwelling : createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces,basement,\ninhabitableLoft,sunExposure)
+
+                            Property -> House** : createHouse(basement,inhabitableLoft,\nsunExposure)
+
+                            end alt
+
+                            Property -> Address** : createAddress(street, cityName, districtName, stateAcronym, zip-code)
+
+                            loop for each photograph
+                            Property -> Photograph** : createPhotograph(linkToPhotograph)
+                            end loop
+
+                            loop for each equipment
+                            Property -> Equipment** : createEquipment(description)
+                            end loop
+end
+        <-- Property :show operation success
+
+
+@enduml

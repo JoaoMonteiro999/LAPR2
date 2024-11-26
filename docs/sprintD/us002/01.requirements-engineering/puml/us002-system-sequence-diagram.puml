@@ -1,0 +1,194 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+        Employee -> System : asks to publish sale announcement
+        activate System
+
+
+        System --> Employee : requests Street name
+        deactivate System
+        Employee -> System : inserts Street name
+        activate System
+
+        System --> Employee : requests City name
+        deactivate System
+        Employee -> System : inserts City name
+        activate System
+
+        opt
+        System --> Employee : requests District name
+        deactivate System
+        Employee -> System : inserts District name
+        activate System
+        end
+
+
+        System --> Employee : requests State acronym
+        deactivate System
+        Employee -> System : inserts State acronym
+        activate System
+
+        System --> Employee : requests Zip-code
+        deactivate System
+        Employee -> System : inserts Zip-code
+        activate System
+
+        System --> Employee : requests property type
+        deactivate System
+        Employee -> System : selects property type
+        activate System
+
+        System --> Employee : requests business type
+        deactivate System
+        Employee -> System : selects business type
+        activate System
+
+        opt
+        System --> Employee : requests contract duration
+        deactivate System
+        Employee -> System : inserts contract duration
+        activate System
+        end
+
+        System --> Employee : requests area
+        deactivate System
+        Employee -> System : inserts area
+        activate System
+
+        System --> Employee : requests distance from city center
+        deactivate System
+        Employee -> System : inserts distance from city center
+        activate System
+
+        System --> Employee : requests property price
+        deactivate System
+        Employee -> System : inserts property price
+        activate System
+
+
+        System --> Employee : requests owner email
+        deactivate System
+        Employee -> System : inserts owner email
+        activate System
+
+        System --> Employee : requests the number of photos
+        deactivate System
+        Employee -> System : inserts number of photos
+        activate System
+
+        loop
+        System --> Employee : requests the photo link
+        deactivate System
+        Employee -> System : inserts photo link
+        activate System
+        end
+
+
+
+        alt type = apartment
+
+        System --> Employee : requests number of bedrooms
+        deactivate System
+        Employee -> System : inserts number of bedrooms
+        activate System
+
+        opt
+        System --> Employee : requests number of bathrooms
+        deactivate System
+        Employee -> System : inserts number of bathrooms
+        activate System
+        end
+
+        System --> Employee : requests number of parking spaces
+        deactivate System
+        Employee -> System : inserts number of parking spaces
+        activate System
+
+
+
+        System --> Employee : requests the equipments information
+        deactivate System
+        Employee -> System : selects if it has central heating, air conditioning,\n both, none or rather not answer
+        activate System
+
+        else type = house
+
+
+
+        System --> Employee : requests number of bedrooms
+        deactivate System
+        Employee -> System : inserts number of bedrooms
+        activate System
+
+        opt
+        System --> Employee : requests number of bathrooms
+        deactivate System
+        Employee -> System : inserts number of bathrooms
+        activate System
+        end
+
+        System --> Employee : requests number of parking spaces
+        deactivate System
+        Employee -> System : inserts number of parking spaces
+        activate System
+
+        System --> Employee : requests the equipments information
+                deactivate System
+                Employee -> System : selects if it has central heating, air conditioning,\n both, none or rather not answer
+                activate System
+
+
+        System --> Employee : requests information about the basement
+        deactivate System
+        Employee -> System : selects if it has a basement
+        activate System
+
+        System --> Employee : requests information about the inhabitable loft
+        deactivate System
+        Employee -> System : selects if it has a inhabitable loft
+        activate System
+
+        System --> Employee : requests the side exposed to the sun
+        opt
+        deactivate System
+        Employee -> System : selects the side exposed to the sun
+        activate System
+        end
+
+
+        else type = Land
+
+        end alt
+
+        System --> Employee : requests the type of commission
+        deactivate System
+        Employee -> System : selects the type of commission
+        activate System
+
+        System --> Employee : requests the commission value
+        deactivate System
+        Employee -> System : inserts the commission value
+        activate System
+
+
+
+
+
+        System --> Employee : confirmation that the add has been created\n and that the sms has been sent
+        deactivate System
+
+
+
+
+@enduml

@@ -1,0 +1,97 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model - US018
+
+'class Platform {
+'  -description
+'}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+
+class PropertyType{
+    propertyType
+}
+
+class BusinessType{
+    businessType
+}
+
+class Lease{
+    leaseValue
+    contractDuration
+}
+
+class Sale{
+    saleValue
+}
+
+class StoreManager{
+}
+
+
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+class Equipment{
+    centralHeating
+    airConditioning
+}
+
+class StoreManager {
+}
+
+class DealAnalysis{
+}
+
+class Order{
+    orderAmount
+}
+
+'StoreManager -- Agency : manages >
+StoreManager "1" -- "1..*" DealAnalysis : does a >
+DealAnalysis -- Property : analyses >
+Property -- Order : belongs to >
+Property "1" -- "1" Address : located at >
+Property <|--- Dwelling
+Dwelling <|-- House
+Dwelling "1" -- "1..*" Equipment : has >
+
+PropertyType "1" -- "1..*" Property : categorized by <
+
+Property "1" -- "1" BusinessType : classified as >
+
+BusinessType "1" -- "1" Lease : categorized as >
+BusinessType "1" -- "1" Sale : categorized as >
+
+@enduml

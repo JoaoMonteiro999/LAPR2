@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+actor "Administrator" as ADM
+participant ":ImportLegacyDataUI" as UI
+participant ":ImportLegacyDataController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "csvFileRepository\n:CSVFileRepository" as CSVFileRepository
+participant "announcementRepository\n:AnnouncementRepository" as AnnouncementRepository
+participant ":Announcement" as Announcement
+participant "AnnouncementDto:AnnouncementDto" as DTO_Announcement
+participant "ApartmentDto:ApartmentDto" as DTO_Apart
+participant "HouseDto:HouseDto" as DTO_House
+
+
+activate ADM
+
+    ADM -> UI : asks to import information from a legacy system
+    activate UI
+
+    UI -> CTRL** : create
+    UI -> CTRL : getCSVFiles()
+    activate CTRL
+
+        ref over CTRL
+        Get CSV Files
+        end ref
+        deactivate CSVFileRepository
+
+        CTRL --> UI : csvFileList
+    deactivate CTRL
+
+    UI --> ADM : shows list of CSV files
+    deactivate UI
+
+    ADM -> UI : selects CSV file
+    activate UI
+
+        UI --> ADM : shows selected data
+    deactivate UI
+
+    ADM -> UI : submits data
+    activate UI
+
+        UI -> CTRL : importCSVFile(csvFile)
+        activate CTRL
+
+            CTRL -> CSVFileRepository : importCSVFile(csvFile)
+            activate CSVFileRepository
+            ref over CSVFileRepository
+            Import CSV Files
+            end ref
+
+
+            CSVFileRepository --> CTRL : announcement
+        deactivate CTRL
+
+        CTRL --> UI : announcement
+    deactivate UI
+
+    UI --> ADM : shows operation success
+
+
+
+
+@enduml

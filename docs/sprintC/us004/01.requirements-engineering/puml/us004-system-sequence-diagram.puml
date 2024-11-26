@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Owner" as Owner
+participant ":System" as System
+
+activate Owner
+
+    Owner -> System : asks to submit a request for listing a property
+    activate System
+
+    System --> Owner : sale or rent?
+    deactivate System
+
+    Owner -> System : selects the wanted option
+    activate System
+
+    System --> Owner : requests property type
+    deactivate System
+
+    Owner -> System : selects property type
+    activate System
+
+    alt type = apartment
+
+        System --> Owner : requests the apartment characteristics
+
+    else type = house
+
+        System --> Owner : requests the house characteristics
+
+    else type = land
+
+        System --> Owner : requests the land characteristics
+        deactivate System
+
+    end alt
+
+    Owner -> System : fills the property characteristics
+    activate System
+
+    System --> Owner : requests to select a responsible agent for the property
+    deactivate System
+
+    Owner --> System : selects the responsible agent
+    activate System
+
+    System --> Owner : shows operation success
+    deactivate System
+
+@enduml

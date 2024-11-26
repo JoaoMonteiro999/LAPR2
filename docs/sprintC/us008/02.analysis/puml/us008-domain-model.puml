@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US8
+
+
+class Offer {
+    publicationDate
+
+
+}
+class Property
+
+
+class Agent {
+
+
+}
+
+class SaleAdvertisement{
+    AdvertisementDate
+}
+
+
+
+
+
+
+
+Agent "1" --- "1..*" SaleAdvertisement: publishes  >
+Agent "1" -- "1..*" Offer : reviews >
+SaleAdvertisement "1" -- "1" Offer : can be <
+Offer "1" -- "1" Property : refers to >
+
+
+
+
+@enduml

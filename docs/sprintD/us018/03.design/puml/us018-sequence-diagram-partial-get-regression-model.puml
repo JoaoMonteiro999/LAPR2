@@ -1,0 +1,54 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'hide footbox
+participant ":DealAnalysis" as D_A
+
+
+autonumber 12
+-> D_A : getRegressionModel()
+autonumber 12.1
+
+activate D_A
+
+    group Get Regression Model
+
+       alt if isRegressionSLM true
+
+           D_A -> D_A : addDataToSimpleRegression(regressionParameters)
+           activate D_A
+
+               D_A --> D_A : regression
+           deactivate D_A
+
+           |||
+
+           D_A -> D_A : createSimpleRegressionModel(regressionParameters, significanceValue, regression)
+           activate D_A
+
+               D_A --> D_A : regressionModel
+           deactivate D_A
+
+       else
+
+           |||
+
+           D_A -> D_A : createMultipleRegressionModel(regressionParameters, significanceValue)
+           activate D_A
+
+               D_A --> D_A : regressionModel
+           deactivate D_A
+
+       end
+
+    end
+    autonumber 13
+
+    <-- D_A : regressionModel
+deactivate D_A
+
+@enduml

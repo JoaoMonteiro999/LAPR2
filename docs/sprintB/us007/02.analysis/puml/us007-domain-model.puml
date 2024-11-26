@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US7
+
+class UnregisteredUser
+
+class Person{
+    name
+    cardNumber
+    taxNumber
+    emailAddress
+    phoneNumber
+}
+
+class Property
+
+class Client {
+    password
+}
+
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+
+UnregisteredUser "1" -- "1" Client: registered as >
+
+Client "1" -- "1..*" Property: buys/rents/sells >
+
+Address "1" -- "1" Person : located at <
+
+Client --|> Person
+
+@enduml

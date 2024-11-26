@@ -1,0 +1,141 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+
+class ListBookingRequestsUI
+class ListBookingRequestsController {
++getAgentLoggedIn()
++getBookingListSorted(Agent agentLoggedIn,\n Date startDate, Date endDate)
+
+
+}
+class Repositories {
++getInstance()
++getAuthenticationRepository()
++VisitScheduleRequestRepository()
+}
+class AuthenticationRepository {
++getAgentLoggedIn()
+}
+class VisitScheduleRequestRepository {
++getVisitScheduleRequestListByAgent(Agent agentLoggedIn,\nDate startDate,Date endDate)
++getListByDate(Date startDate,Date endDate)
++filterListByAgent(Agent agentLoggedIn)
++sortByConfigurationFile()
++getSortingMethod()
+}
+class SortMethod {
++sort(visitScheduleRequestList)
+}
+class BookingRequestMapper {
++toDTO(visitScheduleRequestList)
+
+
+}
+class VisitScheduleRequestListDTO {
+
++add(visitScheduleRequestDTO)
+}
+class VisitScheduleRequestDTO {
++create(visitScheduleRequestDTO)
+}
+class Employee
+class VisitScheduleRequest
+class Property {
+-int area
+-int cityCenter
+-int price
+-String ownerEmail
+}
+class Client {
+
+}
+class Owner {
+
+}
+class PropertyType{
+-int propertyType
+}
+
+class Address{
+-int district
+-int state
+-int city
+-int street
+-int zip-code
+}
+
+class Photograph{
+-String photographLink
+}
+
+class Equipment{
+-int numEquipments
+-List<String> Equipments
+}
+
+class Dwelling{
+-int numBedrooms
+-int numBathrooms
+-int numParkingSpaces
+}
+
+class House{
+-boolean basement
+-boolean inhabitableLoft
+-String sunExposure
+}
+class Slot {
+-startDate
+-endDate
+}
+class Person {
+-String name
+-String passportCardNum
+-String taxNumber
+-String phoneNumber
+-String emailAddress
+}
+
+
+
+
+
+ListBookingRequestsUI .> ListBookingRequestsController
+ListBookingRequestsController ..> Repositories : repositories
+Repositories ..> VisitScheduleRequestRepository :VisitScheduleRequestRepository
+Repositories ..> AuthenticationRepository : AuthenticationRepository
+VisitScheduleRequestRepository ..> SortMethod : uses
+ListBookingRequestsController ..> BookingRequestMapper : mapper
+BookingRequestMapper ..> VisitScheduleRequestListDTO : listDTO
+BookingRequestMapper ..> VisitScheduleRequestDTO : create
+AuthenticationRepository ..> "1" Employee : gets
+VisitScheduleRequestRepository ..> "1..*" VisitScheduleRequest : has
+VisitScheduleRequest ..> "1" Slot
+VisitScheduleRequest ..> "1" Property
+VisitScheduleRequest ..> "1" Client
+Client ..> "1" Address : located at
+Property *-- Dwelling : can be
+Property ..> "1..*" Photograph : has
+Property ..> "1" PropertyType : has
+Property ..> "1" Address : located at
+Owner ..> "1..*" Property : owns
+Dwelling ..> Equipment : can have
+Dwelling *-- House : can be
+
+Person --|> Owner
+Person --|> Employee
+Person --|> Client
+
+
+
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+participant ":ListRequestController" as CTRL
+participant ":Repositories" as Rep
+participant "repositories:Repositories" as RepRep
+participant "Repository:\nRequestsRepository" as ReqRep
+
+
+
+
+
+-> CTRL : ListRequests()
+activate CTRL
+CTRL -> Rep : getInstance()
+activate Rep
+Rep --> CTRL :repositories
+deactivate
+
+CTRL -> RepRep : getRequestRepository()
+activate RepRep
+RepRep --> CTRL : requestRepository
+deactivate
+
+
+
+
+CTRL -> ReqRep : getRequestList()
+        activate ReqRep
+                ReqRep -> ReqRep :Collections.sort(list)
+
+        ReqRep -> ReqRep : getRequestList()
+        ReqRep --> CTRL : list
+        deactivate
+
+
+<-- CTRL : list
+
+@enduml

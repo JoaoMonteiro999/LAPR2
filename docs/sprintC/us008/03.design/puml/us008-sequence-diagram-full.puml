@@ -1,0 +1,189 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Organization Agent" as ADM
+participant ":ListRequestUI" as UI
+participant ":ListRequestController" as CTRL
+participant "Repository:\nRequestsRepository" as ReqRep
+participant "Commission" as Commission
+participant "SaleAnnouncementController" as SaleAnnounCTRL
+participant "SaleAnnouncementRepository" as SaleRep
+participant "SaleAnnouncement" as Sale
+/'participant ":SaleAnnouncement" as Sale
+participant ":Property" as Property
+participant ":Dwelling" as Dwelling
+participant ":House" as House
+participant ":Land" as Land
+participant ":PropertyType" as PropertyType
+participant ":Address" as Address
+participant ":Photograph" as Photograph'/
+
+
+activate ADM
+
+        ADM -> UI : asks to see list of requests
+
+        activate UI
+        UI -> CTRL** : create
+        UI -> CTRL : ListRequests()
+
+        activate CTRL
+        CTRL -> ReqRep** : RequestsRepository
+        CTRL -> ReqRep : getRequestList()
+        activate ReqRep
+        ReqRep -> ReqRep : getRequestList()
+        ReqRep --> CTRL : getRequestList()
+        deactivate
+        CTRL -> CTRL :Collections.sort(list)
+
+        loop
+        CTRL -> CTRL:request.getProperty()
+        CTRL -> CTRL:request.getDate()
+        end
+
+        CTRL --> UI : list
+        deactivate
+
+
+
+        UI --> ADM : shows list of offers by most recent dates \nand asks to choose one or cancel
+
+                deactivate UI
+
+        opt
+        loop
+
+                ADM -> UI : selects request number
+                activate UI
+
+                UI -> CTRL : getRequest(requestNum,list)
+                activate CTRL
+                CTRL -> CTRL : getRequest(requestNum,list)
+                CTRL --> UI : request
+                deactivate
+
+
+
+
+                UI --> ADM: shows three options: accept request,\ndelete request or cancel.
+                deactivate
+                alt option = accept request
+                    ADM -> UI :chooses accept request
+                    activate UI
+                    UI --> ADM : shows and asks type of commission
+                    deactivate
+                    ADM -> UI : selects type of commission
+                    activate UI
+                    UI --> ADM : asks commission value
+                    deactivate
+                    ADM -> UI : inserts commission value
+                    activate UI
+
+                    UI -> CTRL :createCommission(commissiontype,commissionValue)
+                    activate CTRL
+                    CTRL -> Commission** :create
+                    CTRL --> UI :commission
+                    deactivate
+
+                    UI -> CTRL :AcceptRequest(request,commission)
+                    activate CTRL
+                    CTRL -> CTRL : getProperty()
+                    CTRL -> SaleAnnounCTRL** : create
+                    CTRL -> SaleAnnounCTRL : createSaleAnnouncement(property,commission)
+                    activate SaleAnnounCTRL
+                    SaleAnnounCTRL -> SaleRep** : create
+                    SaleAnnounCTRL -> SaleRep : createSaleAnnouncement(property,commission)
+                    activate SaleRep
+                    SaleRep  -> Sale** :create
+                    SaleRep --> SaleAnnounCTRL : saleAnnouncement
+                    deactivate
+                    SaleAnnounCTRL --> CTRL : saleAnnouncement
+                    deactivate
+                    CTRL --> UI : saleAnnouncement
+                    deactivate
+                    UI --> ADM : confirms that the add has been created
+
+
+                    UI -> CTRL : DeleteRequest(request,list)
+                    activate CTRL
+                    CTRL -> CTRL : List.remove(request)
+                    CTRL --> UI : list
+                    deactivate
+
+
+
+
+
+
+
+
+
+
+
+
+
+                else option = delete request
+                    ADM -> UI : chooses delete request
+                    UI -> CTRL : DeleteRequest(request,list)
+                                        activate CTRL
+                                        CTRL -> CTRL : List.remove(request)
+                                        CTRL --> UI : list
+                                        deactivate
+
+
+
+
+
+
+
+                end
+
+
+                UI -> CTRL : ListRequests()
+
+                        activate CTRL
+                        CTRL -> ReqRep : getRequestList()
+                        activate ReqRep
+                        ReqRep -> ReqRep : getRequestList()
+                        ReqRep --> CTRL : getRequestList()
+                        deactivate
+                        CTRL -> CTRL :Collections.sort(list)
+
+                        loop
+                        CTRL -> CTRL:request.getProperty()
+                        CTRL -> CTRL:request.getDate()
+                        end
+
+                        CTRL --> UI : list
+                        deactivate
+
+                UI --> ADM :confirms that the add has been\n deleted and shows refreshed list of \noffers by most recent dates and\n asks to choose one or cancel
+                deactivate
+
+
+
+
+        end
+        end
+            ADM -> UI : selects to cancel
+            activate UI
+
+
+                UI --> ADM : goes to the admin menu
+                deactivate UI
+
+
+
+
+
+
+    deactivate UI
+
+deactivate ADM
+
+@enduml

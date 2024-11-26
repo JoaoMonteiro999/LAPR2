@@ -1,0 +1,21 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant "Repository:\nSaleAnnouncementRepository" as SaleRep
+participant "SaleAnnouncement" as Sale
+autonumber 22
+-> SaleRep : createSaleAnnouncement()
+activate SaleRep
+                        SaleRep -> Sale** : create(property,commission,businessType,contractDuration)
+                        SaleRep -> Sale :setTodayDate()
+                        activate Sale
+                        Sale -> Sale : setTodayDate()
+                        Sale --> SaleRep : saleAnnouncement
+                        deactivate
+                        <-- SaleRep   : saleAnnouncement
+
+
+
+@enduml

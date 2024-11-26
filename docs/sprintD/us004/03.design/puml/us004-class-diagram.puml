@@ -1,0 +1,90 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class CreateRequestUI
+
+class CreateRequestController{
+    + CreateRequestController(AdvertisementRepository)
+    + getAgentsRequest()
+    + createRequest(property, agent)
+}
+
+class AdvertisementRepository{
+    +createRequest(announcementDate)
+
+}
+
+class AgentRepository{
+    +getAgents()
+
+}
+
+class Property{
+-int area
+-int cityCenter
+-int price
++PropertyType(propertyType)
++createApartment(street, cityName, districtName, stateAcronym, zip-code, \nnumBedrooms,numBathrooms,numParkingSpaces,photographs, propertyType)
++createHouse(street, cityName, districtName, stateAcronym, zip-code, \nnumBedrooms,numBathrooms,numParkingSpaces, basement,\ninhabitableLoft, sunExposure, photographs, propertyType)
++createLand(street, cityName, districtName, stateAcronym, zip-code, \nphotographs, propertyType)
+
+}
+
+class Dwelling{
+-int numBedrooms
+-int numBathrooms
+-int numParkingSpaces
++createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces)
++createDwelling(numBedrooms,numBathrooms,\nnumParkingSpaces,basement,\ninhabitableLoft,sunExposure)
+
+}
+
+class House{
+-boolean basement
+-boolean inhabitableLoft
+-int sunExposure
++createHouse(basement,inhabitableLoft,\nsunExposure)
+}
+
+
+class PropertyType{
+-int propertyType
++PropertyType(propertyType)
+
+}
+
+class Address{
+-String street
+-String cityName
+-String districtName
+-String stateAcronym
+-int zipCode
++createAddress(street, cityName, districtName, stateAcronym, zip-code)
+}
+
+class Photograph{
+-String linkToPhotograph
++createPhotograph(linkToPhotograph)
+}
+
+CreateRequestUI ..> CreateRequestController
+
+CreateRequestController ..> Property
+CreateRequestController ..> AdvertisementRepository : request
+CreateRequestController ..> AgentRepository : agent
+
+Property ..> "1" PropertyType : has a
+Property ..> "1" Address : located at
+Property ..> "1..*" Photograph : has
+Property ..> "1" Dwelling : can be
+Dwelling ..> "1" House : can be
+
+@enduml

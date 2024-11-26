@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US15
+
+
+class Client
+
+class Visit{
+    visitDate
+}
+class BookingRequest {
+ requestedDate
+}
+
+class Property{
+    area
+    cityCenterDistance
+    price
+}
+class OrganizationRole{
+    roleName
+}
+
+class House{
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+
+
+class Dwelling{
+    numBedrooms
+    numBathrooms
+    numParkingSpaces
+}
+
+
+
+class Equipment{
+    centralHeating
+    airConditioning
+}
+class PropertyType{
+    propertyType
+}
+
+class Agency{
+    id
+    designation
+    emailAddress
+    phoneNumber
+}
+class Address{
+    street
+    cityName
+    districtName
+    stateAcronym
+    zipCode
+}
+class Photograph {
+photoLink
+}
+
+
+
+
+
+
+Address "1" -- "1" Agency : located at <
+Agency "1" -- "1..*" Employee : owns >
+PropertyType "1" -- "1..*" Property : categorized by <
+Client "1" -- "1..*" BookingRequest : requests >
+Agent "1" -- "1..*" Visit : schedules >
+Agent "1" -- "1..*" BookingRequest : views list >
+Visit "1" -- "1" BookingRequest : turns to <
+BookingRequest "1" -- "1" Property : refers to >
+Agent --|> Person
+Address "1" -- "1" Person : located at <
+Address "1" -- "1" Agency : located at <
+Agent "1" -- "1..*" Property : responsible for >
+
+Visit "1" -- "1" Property : located at >
+Person <|-- Client
+Person <|-- Employee
+OrganizationRole <|-- Agent
+Agency "1" -- "1..*" Employee : owns >
+OrganizationRole "1..*" -- "1" Employee : plays <
+Property <|-- Dwelling
+Photograph "1..*" -- "1" "Property" : has <
+Dwelling "1" -- "1..*" Equipment : has >
+Dwelling <|-- House
+Property "1" -- "1" Address : located at >
+
+
+
+
+
+
+@enduml
